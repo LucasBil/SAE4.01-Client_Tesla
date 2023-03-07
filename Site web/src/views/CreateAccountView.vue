@@ -1,8 +1,6 @@
 <script setup>
-  function test(msg) {
-    console.log(msg);
-  }
-
+  import InputForm from '../components/InputForm.vue';
+  
   function ProAccount(event)
   {
     if(event.target.classList.contains("select-error")) {
@@ -119,18 +117,11 @@
           </select>
         </div>
         <div class="grid grid-cols-2 gap-3">
-          <div>
-            <h1>Nom : <span class="text-error">*</span></h1>
-            <input @change="InputValidator($event)" type="text" placeholder="Nom" class="input input-bordered w-full" required />
-          </div>
-          <div>
-            <h1>Prénom : <span class="text-error">*</span></h1>
-            <input @change="InputValidator($event)" type="text" placeholder="Prénom" class="input input-bordered w-full" required/>
-          </div>
+          <InputForm _label="Nom" :_input="{type:'text',placeholder:'Nom',required:true}" />
+          <InputForm _label="Prénom" :_input="{type:'text',placeholder:'Prénom',required:true}" />
         </div>
         <div class="flex flex-col gap-1">
-          <h1>Email : <span class="text-error">*</span></h1>
-          <input @change="InputValidator($event)" type="email" placeholder="exemple@gmail.com" class="input input-bordered w-full" required/>
+          <InputForm _label="Email" :_input="{type:'email',placeholder:'exemple@gmail.com',required:true}" />
         </div>
         <div class="flex flex-col gap-1">
           <div class="grid grid-col grid-cols-10 gap-3">
@@ -157,8 +148,7 @@
     <div class="col-span-2 m-3 p-6 rounded-xl shadow-xl ">
       <div class="flex flex-col gap-3">
         <div class="flex flex-col gap-1">
-          <h1>Numéro de téléphone :</h1>
-          <input @change="InputValidator($event)" type="tel" placeholder="+33000000000" class="input input-bordered w-full"/>
+          <InputForm _label="Numéro de téléphone" :_input="{type:'tel',placeholder:'+33000000000'}" />
         </div>
         <div class="grid grid-cols-3 gap-y-1 gap-3">
           <h1 class="col-span-3">Addresse :</h1>
@@ -167,8 +157,7 @@
           <input @change="InputValidator($event)" type="text" placeholder="Annecy" class="input input-bordered w-full"/>
         </div>
         <div class="flex flex-col gap-1">
-          <h1>Code Postal :</h1>
-          <input @change="InputValidator($event)" type="text" placeholder="74000" class="input input-bordered w-full"/>
+          <InputForm _label="Code Postal" :_input="{type:'text',placeholder:'74000'}" />
         </div>
       </div>
     </div>
@@ -184,12 +173,10 @@
     <div class="hidden col-span-2 m-3 p-6 rounded-xl shadow-xl  pro">
       <div class="flex flex-col gap-3">
         <div class="flex flex-col gap-1">
-          <h1>Nom de l'entreprise :</h1>
-          <input @change="InputValidator($event)" type="text" placeholder="Tesla" class="input input-bordered w-full"/>
+          <InputForm _label="Nom de l'entreprise" :_input="{type:'text',placeholder:'Tesla'}" />
         </div>
         <div class="flex flex-col gap-1">
-          <h1>Numéro de TVA:</h1>
-          <input @change="InputValidator($event)" type="text" pattern="^[A-Z]{2}[0-9]{11}" placeholder="FR0000000000" class="input input-bordered w-full"/>
+          <InputForm _label="Numéro de TVA" :_input="{type:'text',pattern:'^[A-Z]{2}[0-9]{11}',placeholder:'FR0000000000'}" />
         </div>
       </div>
     </div>

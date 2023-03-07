@@ -40,6 +40,11 @@ const router = createRouter({
       component: () => import('../views/CreateAccountView.vue')
     },
     {
+      path: '/dev',
+      name: 'dev',
+      component: () => import('../views/DevView.vue')
+    },
+    {
       path: '/theme',
       name: 'theme',
       component: ThemeView // a ne pas mettre en mode Lazy Loading
