@@ -5,25 +5,25 @@
     let models = [
         {
             title: 'Modele S',
-            link: 'https://static.tvtropes.org/pmwiki/pub/images/konosuba_aqua_crying.png'
+            link: 'https://tesla-cdn.thron.com/delivery/public/image/tesla/f53054f4-30da-4a94-8aac-1aa6f662996d/bvlatuR/std/1200x628/Model-S-Social?quality=auto-medium&format=auto'
         },
         {
             title: 'Modele X',
-            link: 'https://img1.ak.crunchyroll.com/i/spire1/d5ad9e0a13330935dd0905b2904b00041588258124_full.jpg'
+            link: 'https://tesla-cdn.thron.com/delivery/public/image/tesla/458cfaaf-de1e-47e0-867e-cb78c1993db3/bvlatuR/std/1200x628/Model-X-Social?quality=auto-medium&format=auto'
         },
         {
             title: 'Modele 3',
-            link: 'https://i.pinimg.com/originals/99/31/11/993111212ef23cf2caa30f3ff2ed95ee.png'
+            link: 'https://www.tesla.com/sites/default/files/model3-new/social/model-3-hero-social.jpg'
         },
         {
             title: 'Modele Y',
-            link: 'https://img1.ak.crunchyroll.com/i/spire3/fea3b0a161b8b4a3ff3312e96a9aeb841588257846_full.jpg'
+            link: 'https://tesla-cdn.thron.com/delivery/public/image/tesla/70dea471-18bf-47b7-80f4-7e339c37869e/bvlatuR/std/2880x1800/Model-Y-Main-Hero-Desktop-EMEA-LHD?quality=auto-medium&format=auto'
         }
     ]
 </script>
 
 <template>
-    <div class="grid h-[calc(110vh-288px)]">
-        <Carousel :_imgs="models" _link="cars"/>
+    <div class="h-[calc(110vh-288px)]">
+        <Carousel :_imgs="models" _view="cars"/>
     </div>
 </template>
