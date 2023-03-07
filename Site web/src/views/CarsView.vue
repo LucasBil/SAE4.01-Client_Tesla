@@ -2,12 +2,12 @@
     import { useRoute, RouterLink, onBeforeRouteUpdate } from 'vue-router';
     
     const route = useRoute();
-    const id = route.params.id;
+    const model = route.params.model;
 
-    console.log(id)
+    console.log(model)
 </script>
 
 <template>
     <h1>CarsView</h1>
-    <p>{{ id }}</p>
+    <p>{{ model }}</p>
 </template>

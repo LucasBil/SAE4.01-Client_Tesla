@@ -26,5 +26,4 @@
     <div class="grid h-[calc(110vh-288px)]">
         <Carousel :_imgs="models" _link="cars"/>
     </div>
-    <RouterLink :to="{name:'cars', params: { id: 1 }}">Cars</RouterLink>
 </template>

@@ -4,15 +4,15 @@
             type: Array,
             default: () => [
                 {
-                    title: 'Aqua Pleure',
+                    title: 'AquaPleure',
                     link: 'https://static.tvtropes.org/pmwiki/pub/images/konosuba_aqua_crying.png'
                 },
                 {
-                    title: 'Aqua Merde',
+                    title: 'AquaMerde',
                     link: 'https://img1.ak.crunchyroll.com/i/spire1/d5ad9e0a13330935dd0905b2904b00041588258124_full.jpg'
                 },
                 {
-                    title: 'Aqua ^^',
+                    title: 'Aqua',
                     link: 'https://i.pinimg.com/originals/99/31/11/993111212ef23cf2caa30f3ff2ed95ee.png'
                 }
             ]
@@ -36,7 +36,7 @@
     <div class="carousel w-full h-full">
         <div v-for="_img,index in _imgs" :id="'slide'+index" class="carousel-item relative w-full">
             <div v-if="!hiden.title" class="absolute m-3 p- badge badge-accent badge-lg">{{ _img.title }}</div>
-            <RouterLink v-if="_link" class="w-full h-full" :to="{name:_link, params: { model: _img.title }}">
+            <RouterLink v-if="true" class="w-full h-full" :to="{name:_link, params: { 'model': _img.title }}">
                 <img :src="_img.link" class="w-full h-full object-cover" />
             </RouterLink>
             <img v-else :src="_img.link" class="w-full h-full object-cover" />
