@@ -7,7 +7,7 @@
   import Carousel from '../components/Carousel.vue';
 
   // Variable
-  let memes = ref([]);
+  let memes = ref([{}]);
   let _imgMemes = ref([]);
 
   var status_request = ref(false);
@@ -17,7 +17,12 @@
     api.getAllMemes()
     .then((response) => {
         memes.value = response.data['data']['memes'];
-        _imgMemes.value = memes.value.map((meme) => meme['url']);
+        _imgMemes.value = memes.value.map((meme) => {
+            return {
+                title: meme.name,
+                link: meme.url
+            }
+        });
         status_request.value = true;
     })
     .catch((error) => {

@@ -11,7 +11,7 @@ import FooterView from './components/Footer.vue';
   [
     {
         'name': 'Voitures',
-        'link': '/cars'
+        'link': '/models'
     },
     {
         'name': 'Acessoires',

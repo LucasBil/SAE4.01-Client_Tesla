@@ -1,7 +1,13 @@
-<script setup></script>
+<script setup>
+    import { useRoute, RouterLink, onBeforeRouteUpdate } from 'vue-router';
+    
+    const route = useRoute();
+    const id = route.params.id;
+
+    console.log(id)
+</script>
 
 <template>
-    <main>
-        <h1 class="">Cars View</h1>
-    </main>
+    <h1>CarsView</h1>
+    <p>{{ id }}</p>
 </template>
