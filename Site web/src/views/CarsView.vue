@@ -16,8 +16,13 @@
 
 <template>
     <div>
-        <BreadCrumbs class="m-6" :_items="BreadCrumbsItems"/>
-        <div class="h-[60vh] border-2"></div>
+        <BreadCrumbs class="mx-6 mt-3" :_items="BreadCrumbsItems"/>
+        <div class="h-[60vh] p-3">
+            <Carousel :hiden="{
+                title:true,
+                number:true
+            }"/>
+        </div>
         <div class="grid grid-cols-2 p-3 gap-3">
             <div class="flex flex-col gap-4 p-3">
                 <div class="flex flex-col gap-2">
