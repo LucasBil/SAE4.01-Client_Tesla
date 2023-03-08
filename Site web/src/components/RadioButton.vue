@@ -4,18 +4,11 @@
             type: Array,
             default:[{
                 title: 'Red pill',
-                color:{
-                    type: String,
-                    required: true
-                },
                 checked:true
             },
             {
                 title: 'Blue pill',
-                color:{
-                    type: String,
-                    required: true
-                },
+                info:'35€',
                 checked:false
             }],
             required: true
@@ -33,9 +26,17 @@
     <div>
         <div v-for="radio in _radios" class="form-control">
             <label class="label cursor-pointer">
-                <span class="label-text">{{ radio.title }}</span> 
-                <input v-if="radio.checked" type="radio" :name="'radio-'+id" class="radio checked:bg-red-500" checked />
-                <input v-else type="radio" :name="'radio-'+id" :class="'radio checked:bg-red-500'" />
+                <span class="label-text">
+                    {{ radio.title }} 
+                    <span class="underline" v-if="radio.checked">
+                        (défault)
+                    </span> 
+                    <span v-if="radio.info" class="tooltip underline ml-3 font-bold" :data-tip="radio.info">
+                        i
+                    </span> 
+                </span> 
+                <input v-if="radio.checked" type="radio" :name="'radio-'+id" class="radio checked:bg-accent-focus" checked />
+                <input v-else type="radio" :name="'radio-'+id" :class="'radio checked:bg-accent-focus'" />
             </label>
         </div>
     </div>

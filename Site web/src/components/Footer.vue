@@ -12,8 +12,8 @@
                     'link': '/contact'
                 },
                 {
-                    'name': 'Juridic',
-                    'link': '/juridic'
+                    'name': 'Juridique',
+                    'link': '/juridique'
                 }
             ]
         }
