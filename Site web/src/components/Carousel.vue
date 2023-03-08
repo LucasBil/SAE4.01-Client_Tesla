@@ -38,9 +38,9 @@
         <div class="carousel w-full h-full">
             <div v-for="_img,index in _imgs" :id="'slide'+index" class="carousel-item relative w-full">
                 <div v-if="!hiden.title" class="absolute m-3 p- badge badge-accent badge-lg">{{ _img.title }}</div>
-                <RouterLink v-if="_view" class="w-full h-full" :to="{name:_view, params: {'title': _img.title }}">
+                <a v-if="_view" class="w-full h-full" :href="'/'+_view+_img.title">
                     <img :src="_img.link" class="w-full h-full object-cover" />
-                </RouterLink>
+                </a>
                 <img v-else :src="_img.link" class="w-full h-full object-cover" />
                 <div v-if="!hiden.array" class="absolute flex justify-between transform -translate-y-1/2 left-5 right-5 top-1/2">
                     <a :href="'#slide'+(index+_imgs.length-1)%_imgs.length" class="btn btn-circle">❮</a> 

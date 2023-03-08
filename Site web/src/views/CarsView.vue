@@ -6,7 +6,9 @@
     import BreadCrumbs from '../components/Breadcrumbs.vue';
 
     const route = useRoute();
-    const title = route.params.title;
+    const title = route.params.idmodel;
+
+    console.log(title);
 
     let BreadCrumbsItems = [
         {title:'Motorisation',href:'/models'},
