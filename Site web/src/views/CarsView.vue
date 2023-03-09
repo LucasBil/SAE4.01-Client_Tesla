@@ -25,7 +25,7 @@
                 number:true
             }"/>
         </div>
-        <div class="grid grid-cols-2 p-3 gap-3">
+        <div class="md:grid md:grid-cols-2 p-3 gap-3">
             <div class="flex flex-col gap-4 p-3">
                 <div class="flex flex-col gap-2">
                     <h1 class="text-xl font-bold">Model : <span class="underline">{{ title }}</span></h1>

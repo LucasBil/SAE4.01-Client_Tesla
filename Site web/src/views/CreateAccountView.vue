@@ -101,8 +101,8 @@
 </script>
 
 <template>
-  <form action="/" method="get" class="grid grid-cols-1 md:grid-cols-3">
-    <div class="p-6">
+  <form action="/" method="get" class="md:grid md:grid-cols-3">
+    <div class="px-6 pt-6 md:p-6">
       <h1 class="text-2xl font-bold">Information Obligatoire</h1>
       <p class="py-3">Ces informations sont obligatoires pour la création d'un compte Tesla.</p>
     </div>
@@ -141,7 +141,7 @@
 
     <div class="divider mx-6 md:col-span-3"></div> 
 
-    <div class="p-6">
+    <div class="px-6 md:p-6">
       <h1 class="text-2xl font-bold">Information Complémentaire</h1>
       <p class="text-gray-500 py-3">Ces informations ne sont en rien nécéssaire pour la création d'un compte. Néamnoins elle peuvent nous permettre de vous proposez un meilleur service.</p>
     </div>
@@ -166,7 +166,7 @@
 
     <div class="divider hidden mx-6 md:col-span-3 pro"></div> 
 
-    <div class="p-6 hidden pro">
+    <div class="px-6 md:p-6 hidden pro">
       <h1 class="text-2xl font-bold">Compte Proffessionnel</h1>
       <p class="text-gray-500 py-3">Ces informations ne sont pas nécéssaire pour la création d'un compte. De plus seul les comptes proffessionnel peuvent remplir ces données</p>
     </div>
