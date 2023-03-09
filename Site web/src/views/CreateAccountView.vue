@@ -180,7 +180,10 @@
         </div>
       </div>
     </div>
-    <button type="submit" @click="formValidator()" value="submit" class="btn m-6 shadow-xl col-span-3">Créer le Compte</button>
+
+    <span class="flex align-middle justify-center items-center md:col-span-3 m-6">
+      <button type="submit" @click="formValidator()" value="submit" class="btn w-full shadow-xl">Créer le Compte</button>
+    </span>
     
   </form>
 
