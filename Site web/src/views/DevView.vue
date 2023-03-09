@@ -1,7 +1,7 @@
 <script setup>
-    import BreadCrumbs from '@/components/Breadcrumbs.vue'
+    import { RouterLink, RouterView } from 'vue-router'
 </script>
 
 <template>
-    <BreadCrumbs class="m-6" :_items="[{title:'Home',href:'/'},{title:'Home'},{title:'Home'}]"/>
+    <RouterLink :to="{path:'/cars1'}">Test</RouterLink>
 </template>

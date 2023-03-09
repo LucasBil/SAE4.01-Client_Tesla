@@ -1,4 +1,5 @@
 <script setup>
+    import { RouterLink, RouterView } from 'vue-router'
     defineProps({
         _items: {
             type: Array,
@@ -11,8 +12,8 @@
     <div class="text-sm breadcrumbs">
         <ul>
             <li v-for="item,key in _items">
-                <a :href="item.href" v-if="key == _items.length-1">{{ item.title }}</a>
-                <a :href="item.href" v-else class="font-bold">{{ item.title }}</a>
+                <a v-if="key == _items.length-1">{{ item.title }}</a>
+                <RouterLink :to="{ path:item.href}" v-else class="font-bold">{{ item.title }}</RouterLink>
             </li>
         </ul>
     </div>

@@ -1,6 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
-import ThemeView from '../views/ThemeView.vue'
 import NotFoundView from '../views/NotFoundView.vue'
 
 const router = createRouter({
@@ -52,7 +51,7 @@ const router = createRouter({
     {
       path: '/theme',
       name: 'theme',
-      component: ThemeView // a ne pas mettre en mode Lazy Loading
+      component: () => import('../views/ThemeView.vue')
     },
     { 
       path: '/:pathMatch(.*)',

@@ -5,15 +5,24 @@
             default: ['dark', 'light']
         }
     });
+    
     let activTheme = document.querySelector('html').attributes['data-theme'].value;
+
+    function ChangeTheme(theme) {
+        console.log(activTheme);
+        document.querySelector('html').attributes['data-theme'].value = theme;
+    }
+
 </script>
 
 <template>
-    <div class="form-control">
-        <label v-for="theme in themes" class="label cursor-pointer">
-            <span class="label-text">{{ theme.charAt(0).toUpperCase()+theme.slice(1)}}</span> 
-            <input v-if="activTheme == theme" :data-set-theme="theme" data-act-class="ACTIVECLASS" type="radio" name="radio-10" class="radio radio-accent" checked />
-            <input v-else :data-set-theme="theme" data-act-class="ACTIVECLASS" type="radio" name="radio-10" class="radio radio-accent"/>
+    <div class="form-control w-full">
+        <label class="label">
+            <span class="label-text">Choisissez un magnifique theme</span>
         </label>
+        <select v-model="activTheme" @change="ChangeTheme($event.target.value)" class="select select-bordered">
+            <option disabled selected>{{ activTheme.charAt(0).toUpperCase()+activTheme.slice(1) }} (ancien/défault)</option>
+            <option v-for="theme in themes" :value="theme">{{ theme.charAt(0).toUpperCase()+theme.slice(1)}}</option>
+        </select>
     </div>
 </template>

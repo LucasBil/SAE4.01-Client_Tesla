@@ -1,4 +1,6 @@
 <script setup>
+    import { RouterLink, RouterView } from 'vue-router'
+    
     defineProps({
         redirects:{
             type: Array,
@@ -23,7 +25,7 @@
 <template>
     <footer class="footer footer-center p-10 bg-base-200 text-base-content rounded">
         <div class="flex justify-center gap-4">
-            <a v-for="item in redirects" :href="item.link" class="link link-hover">{{item.name}}</a> 
+            <RouterLink v-for="item in redirects" :to="{path:item.link}" class="link link-hover">{{item.name}}</RouterLink> 
         </div> 
         <div>
             <div class="grid grid-flow-col gap-4">

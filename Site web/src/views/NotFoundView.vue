@@ -1,4 +1,6 @@
-<script setup></script>
+<script setup>
+    import { RouterLink, RouterView } from 'vue-router'
+</script>
 
 <template>
     <div class="hero min-h-[calc(100vh-64px)] bg-base-200">
@@ -13,7 +15,7 @@
                     Vous pouvez retourner à la page d'accueil en cliquant soit sur le bouton ci-dessous ou sur le logo Tesla en haut à gauche.
                 </p>
             </div>
-            <a href="/" class="btn btn-primary">Page d'acceuil</a>
+            <RouterLink to="/" class="btn btn-primary">Page d'acceuil</RouterLink>
             </div>
         </div>
     </div>

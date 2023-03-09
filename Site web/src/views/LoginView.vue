@@ -1,4 +1,6 @@
-<script setup></script>
+<script setup>
+    import { RouterLink, RouterView } from 'vue-router'
+</script>
 
 <template>
     <div class="hero min-h-[calc(100vh-288px)] bg-base-200">
@@ -26,7 +28,7 @@
             <div class="form-control mt-6">
             <button class="btn btn-primary">Connecter</button>
             <label class="label">
-                <a href="/createaccount" class="label-text-alt underline link link-hover">Créer un Compte</a>
+                <RouterLink to="/createaccount" class="label-text-alt underline link link-hover">Créer un Compte</RouterLink>
             </label>
             </div>
         </div>
