@@ -46,7 +46,18 @@
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h8m-8 6h16" /></svg>
           </label>
           <ul class="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52">
-            <li v-for="content in nav_content"><RouterLink :to="{path:content.link}">{{ content.name }}</RouterLink></li>
+            <li v-for="content in nav_content">
+                <a v-if="content.submenu" class="justify-between">
+                    {{ content.name}}
+                    <svg class="fill-current" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M8.59,16.58L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.58Z"/></svg>
+                </a>
+                <ul class="p-2 menu menu-compact dropdown-content bg-base-100 rounded-box w-52" v-if="content.submenu">
+                    <li v-for="subm in content.submenu">
+                        <RouterLink :to="{path:subm.link}">{{ subm.name }}</RouterLink>
+                    </li>
+                </ul>
+                <RouterLink v-if="!content.submenu" :to="{path:content.link}">{{ content.name }}</RouterLink>
+            </li>
           </ul>
         </div>
         <RouterLink to="/" class="btn btn-ghost normal-case text-xl">
@@ -54,8 +65,19 @@
         </RouterLink>
       </div>
       <div class="navbar-center hidden lg:flex">
-        <ul class="menu menu-horizontal px-1">
-            <li v-for="content in nav_content"><RouterLink :to="{path:content.link}">{{ content.name }}</RouterLink></li>
+        <ul class="menu menu-horizontal px-1 z-10">
+            <li v-for="content in nav_content">
+                <a v-if="content.submenu" class="justify-between">
+                    {{ content.name}}
+                    <svg class="fill-current" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><path d="M7.41,8.58L12,13.17L16.59,8.58L18,10L12,16L6,10L7.41,8.58Z"/></svg>
+                </a>
+                <ul class="p-2 menu menu-compact dropdown-content bg-base-100 rounded-box w-52" v-if="content.submenu">
+                    <li v-for="subm in content.submenu">
+                        <RouterLink :to="{path:subm.link}">{{ subm.name }}</RouterLink>
+                    </li>
+                </ul>
+                <RouterLink v-if="!content.submenu" :to="{path:content.link}">{{ content.name }}</RouterLink>
+            </li>
         </ul>
       </div>
       <div class="navbar-end">

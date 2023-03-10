@@ -32,7 +32,7 @@
 </script>
 
 <template v-if="status_request">
-  <div class="p-6 w-[500px] h-[500px]">
+  <div class="p-6 w-full h-[500px]">
     <Carousel :_imgs="_imgMemes" :hiden="{'number': true}"/>
   </div>
 </template>

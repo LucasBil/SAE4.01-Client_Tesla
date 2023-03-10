@@ -11,7 +11,17 @@ import FooterView from './components/Footer.vue';
   [
     {
         'name': 'Voitures',
-        'link': '/models'
+        'link': '/',
+        'submenu':[
+            {
+                'name':'Configurable',
+                'link':'/models'
+            },
+            {
+                'name':'Disponible',
+                'link':'/carsavailable'
+            }
+        ]
     },
     {
         'name': 'Acessoires',
