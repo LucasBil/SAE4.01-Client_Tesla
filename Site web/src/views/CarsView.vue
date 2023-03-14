@@ -11,6 +11,7 @@
     import Carousel from '../components/Carousel.vue';
     import RadioButton from '../components/RadioButton.vue';
     import BreadCrumbs from '../components/Breadcrumbs.vue';
+    import WaitingScreen from '../components/WaitingScreen.vue';
 
     const route = useRoute();
     const nomModele = route.params.nomModele;
@@ -90,8 +91,8 @@
     }
 </script>
 
-<template v-if="status_request.value">
-    <div>
+<template>
+    <div v-if="status_request">
         <BreadCrumbs class="mx-6 mt-3" :_items="BreadCrumbsItems"/>
         <div class="h-[60vh] p-3">
             <Carousel :hiden="{
@@ -210,4 +211,5 @@
             </div>
         </div>
     </div>
+    <WaitingScreen v-else/>
 </template>
