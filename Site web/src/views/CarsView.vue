@@ -7,11 +7,11 @@
     import optionsController from '../api/optionsController';
 
     import { onMounted, ref } from "vue";
+    import store from '../stores';
 
     import Carousel from '../components/Carousel.vue';
     import RadioButton from '../components/RadioButton.vue';
     import BreadCrumbs from '../components/Breadcrumbs.vue';
-    import WaitingScreen from '../components/WaitingScreen.vue';
 
     const route = useRoute();
     const nomModele = route.params.nomModele;
@@ -27,12 +27,12 @@
     let motorisations = ref([{}]);
     let caracteristiques = ref([{}]);
     let options = ref([{}]);
-    var status_request = ref(false);
 
     let motorisationview = ref({});
 
     onMounted(async () => {
         // Get Model
+        store().requestStatus = false;
         modelesController.getByName(nomModele)
         .then((response) => {
             model.value = response.data;
@@ -49,7 +49,7 @@
                 .then((response) => {
                     caracteristiques.value = response.data;
                     console.log(caracteristiques.value);
-                    status_request.value = true;
+                    store().requestStatus = true;
                 })
                 .catch((error) => {
                     console.log(error);
@@ -60,7 +60,7 @@
                 .then((response) => {
                     options.value = response.data;
                     console.log(options.value);
-                    status_request.value = true;
+                    store().requestStatus = true;
                 })
                 .catch((error) => {
                     console.log(error);
@@ -77,13 +77,13 @@
     });
 
     async function SwitchMotorisation(){
-        status_request.value = false;
+        store().requestStatus = false;
         console.log(motorisationview.value);
         caracteristiquesController.getByIdMotorisation(motorisationview.value.idMotorisation)
         .then((response) => {
             caracteristiques.value = response.data;
             console.log(caracteristiques.value);
-            status_request.value = true;
+            store().requestStatus = true;
         })
         .catch((error) => {
             console.log(error);
@@ -92,7 +92,7 @@
 </script>
 
 <template>
-    <div v-if="status_request">
+    <div>
         <BreadCrumbs class="mx-6 mt-3" :_items="BreadCrumbsItems"/>
         <div class="h-[60vh] p-3">
             <Carousel :hiden="{
@@ -211,5 +211,4 @@
             </div>
         </div>
     </div>
-    <WaitingScreen v-else/>
 </template>

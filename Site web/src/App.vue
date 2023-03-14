@@ -1,7 +1,10 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
+import store from './stores'
+
 import  Navbar from './components/Navbar.vue'
 import FooterView from './components/Footer.vue';
+import WaitingScreen from './components/WaitingScreen.vue';
 
 let _menu = [
           { name: 'Voitures', submenu: [
@@ -12,6 +15,7 @@ let _menu = [
           { name:'Theme', link: '/theme'},
         ]
 
+console.log(store().requestStatus);
 </script>
 
 <template>
@@ -41,6 +45,9 @@ let _menu = [
   }
   " />
   </header>
-  <RouterView />
+  <main :class="(store().requestStatus)?'':'hidden'">
+    <RouterView />
+  </main>
+  <WaitingScreen v-if="!store().requestStatus"/>
   <FooterView/>
 </template>
