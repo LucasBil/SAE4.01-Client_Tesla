@@ -53,7 +53,7 @@
                     store().requestStatus = requestsStatus[0] && requestsStatus[1];
                 })
                 .catch((error) => {
-                    console.log(error);
+                    store().requestStatusComputed = error;
                 });
 
                 // Get Options
@@ -65,16 +65,16 @@
                     store().requestStatus = requestsStatus[0] && requestsStatus[1];
                 })
                 .catch((error) => {
-                    console.log(error);
+                    store().requestStatusComputed = error;
                 });
 
             })
             .catch((error) => {
-                console.log(error);
+                store().requestStatusComputed = error;
             });
         })
         .catch((error) => {
-            console.log(error);
+            store().requestStatusComputed = error;
         });
     });
 
@@ -88,7 +88,7 @@
             store().requestStatus = true;
         })
         .catch((error) => {
-            console.log(error);
+            store().requestStatusComputed = error;
         });
     }
 </script>

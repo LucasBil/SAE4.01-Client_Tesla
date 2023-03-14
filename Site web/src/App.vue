@@ -4,6 +4,7 @@ import store from './stores'
 
 import  Navbar from './components/Navbar.vue'
 import FooterView from './components/Footer.vue';
+
 import WaitingScreen from './components/WaitingScreen.vue';
 
 let _menu = [
@@ -46,6 +47,6 @@ let _menu = [
   <main>
     <RouterView />
   </main>
-  <WaitingScreen v-if="!store().requestStatus"/>
+  <WaitingScreen v-if="!store().requestStatus && store().requestStatusComputed == ''"/>
   <FooterView/>
 </template>
