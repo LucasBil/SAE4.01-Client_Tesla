@@ -1,22 +1,96 @@
 <script setup>
     import { useRoute, RouterLink, onBeforeRouteUpdate } from 'vue-router';
 
+    import modelesController from '../api/modelesController.js';
+    import motorisationsController from '../api/motorisationsController';
+    import caracteristiquesController from '../api/caracteristiquesController';
+    import optionsController from '../api/optionsController';
+
+    import { onMounted, ref } from "vue";
+
     import Carousel from '../components/Carousel.vue';
     import RadioButton from '../components/RadioButton.vue';
     import BreadCrumbs from '../components/Breadcrumbs.vue';
 
     const route = useRoute();
-    const title = route.params.idmodel;
-
-    console.log(title);
+    const nomModele = route.params.nomModele;
 
     let BreadCrumbsItems = [
-        {title:'Motorisation',href:'/models'},
-        {title:title}
+        {title:'Modeles',href:'/models'},
+        {title:nomModele}
     ]
+
+
+    // Variable
+    let model = ref({});
+    let motorisations = ref([{}]);
+    let caracteristiques = ref([{}]);
+    let options = ref([{}]);
+    var status_request = ref(false);
+
+    let motorisationview = ref({});
+
+    onMounted(async () => {
+        // Get Model
+        modelesController.getByName(nomModele)
+        .then((response) => {
+            model.value = response.data;
+
+            // Get Motorisations
+            motorisationsController.getByIdModel(model.value.idModele)
+            .then((response) => {
+                motorisations.value = response.data;
+                motorisationview.value = motorisations.value[0];
+                console.log(motorisationview.value);
+
+                // Get Caracteristiques
+                caracteristiquesController.getByIdMotorisation(motorisationview.value.idMotorisation)
+                .then((response) => {
+                    caracteristiques.value = response.data;
+                    console.log(caracteristiques.value);
+                    status_request.value = true;
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+
+                // Get Options
+                optionsController.getByIdMotorisation(motorisationview.value.idMotorisation)
+                .then((response) => {
+                    options.value = response.data;
+                    console.log(options.value);
+                    status_request.value = true;
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+    });
+
+    async function SwitchMotorisation(){
+        status_request.value = false;
+        console.log(motorisationview.value);
+        caracteristiquesController.getByIdMotorisation(motorisationview.value.idMotorisation)
+        .then((response) => {
+            caracteristiques.value = response.data;
+            console.log(caracteristiques.value);
+            status_request.value = true;
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+    }
 </script>
 
-<template>
+<template v-if="status_request.value">
     <div>
         <BreadCrumbs class="mx-6 mt-3" :_items="BreadCrumbsItems"/>
         <div class="h-[60vh] p-3">
@@ -25,44 +99,37 @@
                 number:true
             }"/>
         </div>
+        <div class="flex m-3 gap-3 justify-center">
+            <button @click="motorisationview = motorisation; SwitchMotorisation()" v-for="motorisation in motorisations" class="btn">
+                {{ motorisation.nomMotorisation }}
+            </button>
+        </div>
         <div class="md:grid md:grid-cols-2 p-3 gap-3">
             <div class="flex flex-col gap-4 p-3">
                 <div class="flex flex-col gap-2">
-                    <h1 class="text-xl font-bold">Model : <span class="underline">{{ title }}</span></h1>
-                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsam nam eaque pariatur nostrum rem, aut in. Sapiente, fuga! Nostrum praesentium amet excepturi veniam atque ducimus repudiandae pariatur dolorem ad nisi!</p>
+                    <h1 class="text-xl font-bold">Motorisation : <span class="underline">{{ motorisationview.nomMotorisation }}</span></h1>
+                    <p>{{ motorisationview.description }}</p>
                 </div>
                 <div>
                     <h2 class="text-lg">Caratéristique :</h2>
-                    <div class="w-full stats stats-vertical xl:stats-horizontal shadow">
-                        <div class="stat">
-                            <div class="stat-title">Vitesse maximale</div>
-                            <div class="stat-value text-primary">250 km/h</div>
-                        </div>
-                        <div class="stat">
-                            <div class="stat-title">Autonomie</div>
-                            <div class="stat-value text-secondary">634 km</div>
-                        </div>
-                        <div class="stat">
-                            <div class="stat-title">Accélération 0-100</div>
-                            <div class="stat-value">3,2 s</div>
+                    <div class="w-full stats stats-vertical shadow">
+                        <div v-for="caracteristique in caracteristiques" class="stat">
+                            <div v-if="caracteristique.unite" class="stat-title">{{caracteristique.nomCaracteristique }}</div>
+                            <div v-if="caracteristique.unite" class="stat-value text-primary whitespace-normal">{{ `${caracteristique.motorisationsNavigation[0].valeurCar} ${(caracteristique.unite==null)?'':caracteristique.unite}`}}</div>
+                            <div v-else tabindex="0" class="collapse collapse-arrow  border-base-300 bg-base-100 rounded-box">
+                                <div class="collapse-title text-xl font-medium">
+                                    {{ caracteristique.nomCaracteristique }}
+                                </div>
+                                <div class="collapse-content"> 
+                                    <p>{{ caracteristique.description }}</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div>
-                    <h2 class="text-lg">Caractéristiques principales :</h2>
-                    <ul class="ml-6">
-                        <li>Transmission Intégrale</li>
-                        <li>Autopilot Standard </li>
-                        <li>Recharge facile</li>
-                        <li>Mode Sentinelle</li>
-                        <li>Suspension adaptative</li>
-                        <li>Vaste espace de stockage</li>
-                        <li>Application mobile Tesla</li>
-                    </ul>
-                </div>
             </div>
             <div class="border-2 p-6 shadow-xl rounded-xl">
-                <h1 class="text-3xl font-bold">Prix : <span class="text-accent">11 5000 €</span></h1>
+                <h1 class="text-3xl font-bold">Prix : <span class="text-accent">{{ `${motorisationview.prix}` }}</span></h1>
                 <div class="flex flex-col my-2 gap-3">
                     <div class="my-2">
                         <h1>Couleurs extérieures</h1>

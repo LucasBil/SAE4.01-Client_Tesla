@@ -1,6 +1,6 @@
 <script setup>
     // Axios import
-    import modelesControler from '../api/modelesControler.js';
+    import modelesController from '../api/modelesController.js';
     import { onMounted, ref } from "vue";
 
     import Carousel from '../components/Carousel.vue';
@@ -13,7 +13,7 @@
 
     // Method
     onMounted(async () => {
-        modelesControler.getAll()
+        modelesController.getAll()
         .then((response) => {
             modeles.value = response.data;
             modeles.value.forEach(model => {
