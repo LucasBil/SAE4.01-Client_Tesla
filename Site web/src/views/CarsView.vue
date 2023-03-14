@@ -29,10 +29,10 @@
     let options = ref([{}]);
 
     let motorisationview = ref({});
+    store().requestStatus = false;
 
     onMounted(async () => {
         // Get Model
-        store().requestStatus = false;
         modelesController.getByName(nomModele)
         .then((response) => {
             model.value = response.data;
@@ -42,14 +42,15 @@
             .then((response) => {
                 motorisations.value = response.data;
                 motorisationview.value = motorisations.value[0];
-                console.log(motorisationview.value);
+
+                let requestsStatus = [false, false]
 
                 // Get Caracteristiques
                 caracteristiquesController.getByIdMotorisation(motorisationview.value.idMotorisation)
                 .then((response) => {
                     caracteristiques.value = response.data;
-                    console.log(caracteristiques.value);
-                    store().requestStatus = true;
+                    requestsStatus[0] = true;
+                    store().requestStatus = requestsStatus[0] && requestsStatus[1];
                 })
                 .catch((error) => {
                     console.log(error);
@@ -60,7 +61,8 @@
                 .then((response) => {
                     options.value = response.data;
                     console.log(options.value);
-                    store().requestStatus = true;
+                    requestsStatus[1] = true;
+                    store().requestStatus = requestsStatus[0] && requestsStatus[1];
                 })
                 .catch((error) => {
                     console.log(error);
@@ -92,7 +94,7 @@
 </script>
 
 <template>
-    <div>
+    <div v-if="store().requestStatus">
         <BreadCrumbs class="mx-6 mt-3" :_items="BreadCrumbsItems"/>
         <div class="h-[60vh] p-3">
             <Carousel :hiden="{
@@ -115,8 +117,8 @@
                     <h2 class="text-lg">Caratéristique :</h2>
                     <div class="w-full stats stats-vertical shadow">
                         <div v-for="caracteristique in caracteristiques" class="stat">
-                            <div v-if="caracteristique.unite" class="stat-title">{{caracteristique.nomCaracteristique }}</div>
-                            <div v-if="caracteristique.unite" class="stat-value text-primary whitespace-normal">{{ `${caracteristique.motorisationsNavigation[0].valeurCar} ${(caracteristique.unite==null)?'':caracteristique.unite}`}}</div>
+                            <div v-if="!caracteristique.description" class="stat-title">{{caracteristique.nomCaracteristique }}</div>
+                            <div v-if="!caracteristique.description" class="stat-value text-primary whitespace-normal">{{ `${caracteristique.motorisationsNavigation[0].valeurCar} ${(caracteristique.unite==null)?'':caracteristique.unite}`}}</div>
                             <div v-else tabindex="0" class="collapse collapse-arrow  border-base-300 bg-base-100 rounded-box">
                                 <div class="collapse-title text-xl font-medium">
                                     {{ caracteristique.nomCaracteristique }}

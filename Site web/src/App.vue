@@ -14,8 +14,6 @@ let _menu = [
           { name: 'Acessoires', link: '/mershs'},
           { name:'Theme', link: '/theme'},
         ]
-
-console.log(store().requestStatus);
 </script>
 
 <template>
@@ -45,7 +43,7 @@ console.log(store().requestStatus);
   }
   " />
   </header>
-  <main :class="(store().requestStatus)?'':'hidden'">
+  <main>
     <RouterView />
   </main>
   <WaitingScreen v-if="!store().requestStatus"/>

@@ -9,10 +9,10 @@
     // Variable
     let modeles = ref([{}]);
     let carousel = ref([]);
+    store().requestStatus = false;
 
     // Method
     onMounted(async () => {
-        store().requestStatus = false;
         modelesController.getAll()
         .then((response) => {
             modeles.value = response.data;
@@ -31,7 +31,7 @@
 </script>
 
 <template>
-    <div class="h-[calc(110vh-288px)]">
+    <div v-if="store().requestStatus" class="h-[calc(110vh-288px)]">
         <Carousel :_imgs="carousel" _view="cars"/>
     </div>
 </template>
