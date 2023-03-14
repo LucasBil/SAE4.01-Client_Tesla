@@ -1,35 +1,4 @@
-<script setup>
-  // Axios import
-  import api from '../api';
-  import { onMounted, ref } from "vue";
-
-  // Composant import
-  import Carousel from '../components/Carousel.vue';
-
-  // Variable
-  let memes = ref([{}]);
-  let _imgMemes = ref([]);
-
-  var status_request = ref(false);
-
-  // Method
-  onMounted(async () => {
-    api.getAllMemes()
-    .then((response) => {
-        memes.value = response.data['data']['memes'];
-        _imgMemes.value = memes.value.map((meme) => {
-            return {
-                title: meme.name,
-                link: meme.url
-            }
-        });
-        status_request.value = true;
-    })
-    .catch((error) => {
-        console.log(error);
-    });
-  });
-</script>
+<script setup></script>
 
 <template v-if="status_request">
   <div class="w-full h-[calc(100vh-64px)] bg-[url(../assets/img/teslaHomePage.jpg)] text-base-100 bg-cover flex justify-center align-middle items-center">

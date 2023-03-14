@@ -1,29 +1,38 @@
 <script setup>
-    import { RouterLink, RouterView } from 'vue-router'
+    // Axios import
+    import modelesControler from '../api/modelesControler.js';
+    import { onMounted, ref } from "vue";
+
     import Carousel from '../components/Carousel.vue';
 
-    let models = [
-        {
-            title: 'Modele S',
-            link: 'https://tesla-cdn.thron.com/delivery/public/image/tesla/f53054f4-30da-4a94-8aac-1aa6f662996d/bvlatuR/std/1200x628/Model-S-Social?quality=auto-medium&format=auto'
-        },
-        {
-            title: 'Modele X',
-            link: 'https://tesla-cdn.thron.com/delivery/public/image/tesla/458cfaaf-de1e-47e0-867e-cb78c1993db3/bvlatuR/std/1200x628/Model-X-Social?quality=auto-medium&format=auto'
-        },
-        {
-            title: 'Modele 3',
-            link: 'https://www.tesla.com/sites/default/files/model3-new/social/model-3-hero-social.jpg'
-        },
-        {
-            title: 'Modele Y',
-            link: 'https://tesla-cdn.thron.com/delivery/public/image/tesla/70dea471-18bf-47b7-80f4-7e339c37869e/bvlatuR/std/2880x1800/Model-Y-Main-Hero-Desktop-EMEA-LHD?quality=auto-medium&format=auto'
-        }
-    ]
+    // Variable
+    let modeles = ref([{}]);
+    var status_request = ref(false);
+
+    let carousel = ref([]);
+
+    // Method
+    onMounted(async () => {
+        modelesControler.getAll()
+        .then((response) => {
+            modeles.value = response.data;
+            modeles.value.forEach(model => {
+                console.log(model.photo.url[0]);
+                carousel.value.push({
+                    title: model.nomModele,
+                    link: `http://${model.photo.url[0]}`
+                });
+            });
+            status_request.value = true;
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+    });
 </script>
 
-<template>
+<template v-if="status_request">
     <div class="h-[calc(110vh-288px)]">
-        <Carousel :_imgs="models" _view="cars"/>
+        <Carousel :_imgs="carousel" _view="cars"/>
     </div>
 </template>

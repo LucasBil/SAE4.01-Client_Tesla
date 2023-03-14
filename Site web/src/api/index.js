@@ -1,13 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-    baseURL: "https://api.imgflip.com"
+    baseURL: "https://api-tesla.azurewebsites.net/api"
 });
 
-const getAllMemes = () => api.get("/get_memes");
-
-const apis = {
-    getAllMemes
-};
-
-export default apis;
+export default api;
