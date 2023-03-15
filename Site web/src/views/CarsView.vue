@@ -1,10 +1,7 @@
 <script setup>
     import { useRoute, RouterLink, onBeforeRouteUpdate } from 'vue-router';
 
-    import modelesController from '../api/modelesController.js';
-    import motorisationsController from '../api/motorisationsController';
-    import caracteristiquesController from '../api/caracteristiquesController';
-    import optionsController from '../api/optionsController';
+    import api from '../api';
 
     import { onMounted, ref } from "vue";
     import store from '../stores';
@@ -33,12 +30,13 @@
 
     onMounted(async () => {
         // Get Model
-        modelesController.getByName(nomModele)
+        api.ModelesController.GetByName(nomModele)
         .then((response) => {
             model.value = response.data;
+            console.log(model.value)
 
             // Get Motorisations
-            motorisationsController.getByIdModel(model.value.idModele)
+            api.MotorisationsController.GetByIdModel(model.value.idModele)
             .then((response) => {
                 motorisations.value = response.data;
                 motorisationview.value = motorisations.value[0];
@@ -46,7 +44,7 @@
                 let requestsStatus = [false, false]
 
                 // Get Caracteristiques
-                caracteristiquesController.getByIdMotorisation(motorisationview.value.idMotorisation)
+                api.CaracteristiquesController.GetByIdMotorisation(motorisationview.value.idMotorisation)
                 .then((response) => {
                     caracteristiques.value = response.data;
                     requestsStatus[0] = true;
@@ -54,10 +52,11 @@
                 })
                 .catch((error) => {
                     store().requestStatusComputed = error;
+                    console.log('getCarateristiques')
                 });
 
                 // Get Options
-                optionsController.getByIdMotorisation(motorisationview.value.idMotorisation)
+                api.OptionsController.GetByIdMotorisation(motorisationview.value.idMotorisation)
                 .then((response) => {
                     options.value = response.data;
                     console.log(options.value);
@@ -66,22 +65,25 @@
                 })
                 .catch((error) => {
                     store().requestStatusComputed = error;
+                    console.log('getOptions')
                 });
 
             })
             .catch((error) => {
                 store().requestStatusComputed = error;
+                console.log('getMotorisation')
             });
         })
         .catch((error) => {
             store().requestStatusComputed = error;
+            console.log('getModele')
         });
     });
 
     async function SwitchMotorisation(){
         store().requestStatus = false;
         console.log(motorisationview.value);
-        caracteristiquesController.getByIdMotorisation(motorisationview.value.idMotorisation)
+        api.CaracteristiquesController.GetByIdMotorisation(motorisationview.value.idMotorisation)
         .then((response) => {
             caracteristiques.value = response.data;
             console.log(caracteristiques.value);

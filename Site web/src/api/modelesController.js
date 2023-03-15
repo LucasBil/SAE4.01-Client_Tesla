@@ -1,22 +1,15 @@
-import api from './index.js';
+import axios from "axios";
+import ControllerManager from "./ControllerManager";
 
-const getAll = () => api.get("/modeles");
-const getById = (id) => api.get(`/modeles/ById/${id}`);
-const getByName = (name) => api.get(`/modeles/ByName/${name}`);
+class ModelesController extends ControllerManager {
+    constructor() {
+        super();
+        this.name = "modeles";
+    }
 
-const post = (modele) => api.post("/modeles", modele);
+    GetByName(name) {
+        return axios.get(`${ControllerManager.baseURL}/${this.name}/ByName/${name}`);
+    }
+}
 
-const put = (modele) => api.put("/modeles", modele);
-
-const remove = (id) => api.delete(`/modeles/${id}`);
-
-const modelesControler = {
-    getAll,
-    getById,
-    getByName,
-    post,
-    put,
-    remove
-};
-
-export default modelesControler;
+export default new ModelesController();

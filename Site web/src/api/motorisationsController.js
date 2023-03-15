@@ -1,24 +1,19 @@
-import api from './index.js';
+import axios from "axios";
+import ControllerManager from "./ControllerManager";
 
-const getAll = () => api.get("/motorisations");
-const getById = (id) => api.get(`/motorisations/ById/${id}`);
-const getByName = (name) => api.get(`/motorisations/ByName/${name}`);
-const getByIdModel = (id) => api.get(`/motorisations/ByIdModele/${id}`);
+class MotorisationsController extends ControllerManager {
+    constructor() {
+        super();
+        this.name = "motorisations";
+    }
 
-const post = (modele) => api.post("/motorisations", modele);
+    GetByName(name) {
+        return axios.get(`${ControllerManager.baseURL}/${this.name}/ByName/${name}`);
+    }
 
-const put = (modele) => api.put("/motorisations", modele);
+    GetByIdModel(id) {
+        return axios.get(`${ControllerManager.baseURL}/${this.name}/ByIdModele/${id}`);
+    }
+}
 
-const remove = (id) => api.delete(`/motorisations/${id}`);
-
-const motorisationsController = {
-    getAll,
-    getById,
-    getByIdModel,
-    getByName,
-    post,
-    put,
-    remove
-};
-
-export default motorisationsController;
+export default new MotorisationsController();

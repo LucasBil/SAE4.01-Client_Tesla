@@ -1,7 +1,13 @@
-import axios from 'axios';
+import OptionsController from "./OptionsController";
+import MotorisationsController from "./MotorisationsController";
+import ModelesController from "./ModelesController";
+import CaracteristiquesController from "./CaracteristiquesController";
 
-const api = axios.create({
-    baseURL: "https://api-tesla.azurewebsites.net/api"
-});
+const api = {
+    OptionsController,
+    MotorisationsController,
+    ModelesController,
+    CaracteristiquesController
+};
 
 export default api;
