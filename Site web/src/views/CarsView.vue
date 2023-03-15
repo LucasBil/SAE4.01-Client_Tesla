@@ -1,10 +1,8 @@
 <script setup>
     import { useRoute, RouterLink, onBeforeRouteUpdate } from 'vue-router';
 
-    import api from '../api';
-
     import { onMounted, ref } from "vue";
-    import store from '../stores';
+    import { request , controller } from '../stores';
 
     import Carousel from '../components/Carousel.vue';
     import RadioButton from '../components/RadioButton.vue';
@@ -26,17 +24,16 @@
     let options = ref([{}]);
 
     let motorisationview = ref({});
-    store().requestStatus = false;
+    request().access();
 
     onMounted(async () => {
         // Get Model
-        api.ModelesController.GetByName(nomModele)
+        controller().ModelesController.GetByName(nomModele)
         .then((response) => {
             model.value = response.data;
-            console.log(model.value)
 
             // Get Motorisations
-            api.MotorisationsController.GetByIdModel(model.value.idModele)
+            controller().MotorisationsController.GetByIdModel(model.value.idModele)
             .then((response) => {
                 motorisations.value = response.data;
                 motorisationview.value = motorisations.value[0];
@@ -44,59 +41,59 @@
                 let requestsStatus = [false, false]
 
                 // Get Caracteristiques
-                api.CaracteristiquesController.GetByIdMotorisation(motorisationview.value.idMotorisation)
+                controller().CaracteristiquesController.GetByIdMotorisation(motorisationview.value.idMotorisation)
                 .then((response) => {
                     caracteristiques.value = response.data;
                     requestsStatus[0] = true;
-                    store().requestStatus = requestsStatus[0] && requestsStatus[1];
+                    if (requestsStatus[0] && requestsStatus[1])
+                        request().success(response)
                 })
                 .catch((error) => {
-                    store().requestStatusComputed = error;
-                    console.log('getCarateristiques')
+                    request().error(error);
+                    request().debug();
                 });
 
                 // Get Options
-                api.OptionsController.GetByIdMotorisation(motorisationview.value.idMotorisation)
+                controller().OptionsController.GetByIdMotorisation(motorisationview.value.idMotorisation)
                 .then((response) => {
                     options.value = response.data;
-                    console.log(options.value);
                     requestsStatus[1] = true;
-                    store().requestStatus = requestsStatus[0] && requestsStatus[1];
+                    if (requestsStatus[0] && requestsStatus[1])
+                        request().success(response)
                 })
                 .catch((error) => {
-                    store().requestStatusComputed = error;
-                    console.log('getOptions')
+                    request().error(error);
+                    request().debug();
                 });
 
             })
             .catch((error) => {
-                store().requestStatusComputed = error;
-                console.log('getMotorisation')
+                request().error(error);
+                request().debug();
             });
         })
         .catch((error) => {
-            store().requestStatusComputed = error;
-            console.log('getModele')
+            request().error(error);
+            request().debug();
         });
     });
 
     async function SwitchMotorisation(){
-        store().requestStatus = false;
-        console.log(motorisationview.value);
-        api.CaracteristiquesController.GetByIdMotorisation(motorisationview.value.idMotorisation)
+        request().access();
+        controller().CaracteristiquesController.GetByIdMotorisation(motorisationview.value.idMotorisation)
         .then((response) => {
             caracteristiques.value = response.data;
-            console.log(caracteristiques.value);
-            store().requestStatus = true;
+            request().success(response)
         })
         .catch((error) => {
-            store().requestStatusComputed = error;
+            request().error(error);
+            request().debug();
         });
     }
 </script>
 
 <template>
-    <div v-if="store().requestStatus">
+    <div v-if="request().requestState">
         <BreadCrumbs class="mx-6 mt-3" :_items="BreadCrumbsItems"/>
         <div class="h-[60vh] p-3">
             <Carousel :hiden="{

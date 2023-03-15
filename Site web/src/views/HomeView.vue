@@ -1,4 +1,5 @@
-<script setup></script>
+<script setup>
+</script>
 
 <template v-if="status_request">
   <div class="w-full h-[calc(100vh-64px)] bg-[url(../assets/img/teslaHomePage.jpg)] text-base-100 bg-cover flex justify-center align-middle items-center">

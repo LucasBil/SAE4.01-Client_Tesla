@@ -2,16 +2,16 @@ import axios from 'axios';
 
 class ControllerManager {
     static baseURL = "https://api-tesla.azurewebsites.net/api";
-    #name;
+    name; // Voir l'accès à la propriété name dans le constructeur public/private
 
     constructor() {}
 
     set name(value) {
-        this.#name = value;
+        this.name = value;
     }
 
     get name() {
-        return this.#name;
+        return this.name;
     }
 
     GetAll() {
