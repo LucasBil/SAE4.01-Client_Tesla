@@ -1,16 +1,29 @@
 <script setup>
+    import { onMounted, ref } from "vue";
+
     defineProps({
         themes: {
             type: Array,
             default: ['dark', 'light']
         }
     });
-    
-    let activTheme = document.querySelector('html').attributes['data-theme'].value;
+
+    let themeactiv = ref(capitalizeFirstLetter(localStorage.activTheme));
+
+    onMounted(async () => {
+        if (localStorage.activTheme)
+        {
+            ChangeTheme(localStorage.activTheme);
+        }
+    });
 
     function ChangeTheme(theme) {
-        console.log(activTheme);
+        localStorage.activTheme = theme;
         document.querySelector('html').attributes['data-theme'].value = theme;
+    }
+
+    function capitalizeFirstLetter(string) {
+        return string.charAt(0).toUpperCase() + string.slice(1);
     }
 
 </script>
@@ -20,9 +33,9 @@
         <label class="label">
             <span class="label-text">Choisissez un magnifique theme</span>
         </label>
-        <select v-model="activTheme" @change="ChangeTheme($event.target.value)" class="select select-bordered">
-            <option disabled selected>{{ activTheme.charAt(0).toUpperCase()+activTheme.slice(1) }} (ancien/défault)</option>
-            <option v-for="theme in themes" :value="theme">{{ theme.charAt(0).toUpperCase()+theme.slice(1)}}</option>
+        <select @change="ChangeTheme($event.target.value)" class="select select-bordered">
+            <option disabled selected>{{ `${themeactiv} (ancien/défault)` }}</option>
+            <option v-for="theme in themes" :value="theme">{{ capitalizeFirstLetter(theme)}}</option>
         </select>
     </div>
 </template>

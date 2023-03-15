@@ -1,4 +1,3 @@
-import { ref, computed } from 'vue'
 import api from '../api'
 import { defineStore } from 'pinia'
 
