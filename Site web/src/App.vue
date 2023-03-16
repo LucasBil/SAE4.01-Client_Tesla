@@ -1,11 +1,17 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
+
+import { onMounted, ref } from "vue";
+
+// Stores
 import { request } from './stores'
 
+// Composants
 import  Navbar from './components/Navbar.vue'
 import FooterView from './components/Footer.vue';
 import WaitingScreen from './components/WaitingScreen.vue';
 
+// Data
 let _menu = [
           { name: 'Voitures', submenu: [
             { name: 'Configurable', link: '/models'},

@@ -8,7 +8,7 @@
         }
     });
 
-    let themeactiv = ref(capitalizeFirstLetter(localStorage.activTheme));
+    let themeactiv = (localStorage.activTheme)?ref(capitalizeFirstLetter(localStorage.activTheme)):ref('');
 
     onMounted(async () => {
         if (localStorage.activTheme)

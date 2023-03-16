@@ -1,34 +1,42 @@
 <script setup>
-    // Axios import
-    import { request, controller } from '../stores';
-
     import { onMounted, ref } from "vue";
 
+    // Stores
+    import { request, controller } from '../stores';
+    import saves from '../stores/saves.js';
+
+    // Composants
     import Carousel from '../components/Carousel.vue';
 
     // Variable
-    let modeles = ref([{}]);
     let carousel = ref([]);
-    request().access();
-
+    
     // Method
-    onMounted(async () => {
-        controller().ModelesController.GetAll()
-        .then((response) => {
-            modeles.value = response.data;
-            modeles.value.forEach(model => {
-                carousel.value.push({
-                    title: model.nomModele,
-                    link: `http://${model.photo.url[0]}`
+    if (saves().findValue('MotorisationCarousel')){
+        carousel.value = saves().findValue('MotorisationCarousel').value
+    }
+    else
+    {
+        request().access();
+        onMounted(async () => {
+            controller().ModelesController.GetAll()
+            .then((response) => {
+                response.data.forEach(model => {
+                    carousel.value.push({
+                        title: model.nomModele,
+                        link: `http://${model.photo.url[0]}`
+                    });
                 });
+                saves().save('MotorisationCarousel', carousel.value);
+                request().success(response);
+            })
+            .catch((error) => {
+                request().error(error);
+                request().debug();
             });
-            request().success(response);
-        })
-        .catch((error) => {
-            request().error(error);
-            request().debug();
         });
-    });
+    }
+
 </script>
 
 <template>
