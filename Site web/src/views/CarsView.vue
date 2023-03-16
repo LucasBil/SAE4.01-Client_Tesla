@@ -1,9 +1,12 @@
 <script setup>
     import { useRoute, RouterLink, onBeforeRouteUpdate } from 'vue-router';
-
     import { onMounted, ref } from "vue";
-    import { request , controller } from '../stores';
 
+    // Stores
+    import { request , controller } from '../stores';
+    import saves from '../stores/saves';
+
+    // Composants
     import Carousel from '../components/Carousel.vue';
     import RadioButton from '../components/RadioButton.vue';
     import BreadCrumbs from '../components/Breadcrumbs.vue';
@@ -24,8 +27,12 @@
     let options = ref([{}]);
 
     let motorisationview = ref({});
-    request().access();
 
+    if(!saves().findValue(`Caractéristiques_Mototrisation${motorisationview.value.idMotorisation}`) && !saves().findValue(`Options_Mototrisation${motorisationview.value.idMotorisation}`))
+    {
+        request().access();
+    }
+    
     onMounted(async () => {
         // Get Model
         controller().ModelesController.GetByName(nomModele)
@@ -37,26 +44,41 @@
             .then((response) => {
                 motorisations.value = response.data;
                 motorisationview.value = motorisations.value[0];
+                console.log(motorisationview.value)
 
                 let requestsStatus = [false, false]
-
-                // Get Caracteristiques
-                controller().CaracteristiquesController.GetByIdMotorisation(motorisationview.value.idMotorisation)
-                .then((response) => {
-                    caracteristiques.value = response.data;
+                if (saves().findValue(`Caractéristiques_Mototrisation${motorisationview.value.idMotorisation}`))
+                {
+                    caracteristiques.value = saves().findValue(`Caractéristiques_Mototrisation${motorisationview.value.idMotorisation}`).value;
                     requestsStatus[0] = true;
-                    if (requestsStatus[0] && requestsStatus[1])
-                        request().success(response)
-                })
-                .catch((error) => {
-                    request().error(error);
-                    request().debug();
-                });
+                }
+                else
+                {
+                    // Get Caracteristiques
+                    controller().CaracteristiquesController.GetByIdMotorisation(motorisationview.value.idMotorisation)
+                    .then((response) => {
+                        caracteristiques.value = response.data;
+                        saves().save(`Caractéristiques_Mototrisation${motorisationview.value.idMotorisation}`, caracteristiques.value);
+                        requestsStatus[0] = true;
+                        if (requestsStatus[0] && requestsStatus[1])
+                            request().success(response)
+                    })
+                    .catch((error) => {
+                        request().error(error);
+                        request().debug();
+                    });
+                }
 
+                if ( saves().findValue(`Options_Mototrisation${motorisationview.value.idMotorisation}`))
+                {
+                    options.value = saves().findValue(`Options_Mototrisation${motorisationview.value.idMotorisation}`);
+                    requestsStatus[1] = true;
+                }
                 // Get Options
                 controller().OptionsController.GetByIdMotorisation(motorisationview.value.idMotorisation)
                 .then((response) => {
                     options.value = response.data;
+                    saves().save(`Options_Mototrisation${motorisationview.value.idMotorisation}`, caracteristiques.value);
                     requestsStatus[1] = true;
                     if (requestsStatus[0] && requestsStatus[1])
                         request().success(response)
@@ -79,16 +101,54 @@
     });
 
     async function SwitchMotorisation(){
-        request().access();
-        controller().CaracteristiquesController.GetByIdMotorisation(motorisationview.value.idMotorisation)
-        .then((response) => {
-            caracteristiques.value = response.data;
-            request().success(response)
-        })
-        .catch((error) => {
-            request().error(error);
-            request().debug();
-        });
+        let requestsStatus = [false, false]
+
+        if(!saves().findValue(`Caractéristiques_Mototrisation${motorisationview.value.idMotorisation}`) && !saves().findValue(`Options_Mototrisation${motorisationview.value.idMotorisation}`))
+        {
+            request().access();
+        }
+
+        if (saves().findValue(`Caractéristiques_Mototrisation${motorisationview.value.idMotorisation}`))
+        {
+            caracteristiques.value = saves().findValue(`Caractéristiques_Mototrisation${motorisationview.value.idMotorisation}`).value;
+            requestsStatus[0] = true;
+        }
+        else
+        {
+            controller().CaracteristiquesController.GetByIdMotorisation(motorisationview.value.idMotorisation)
+            .then((response) => {
+                caracteristiques.value = response.data;
+                saves().save(`Caractéristiques_Mototrisation${motorisationview.value.idMotorisation}`, caracteristiques.value);
+                requestsStatus[0] = true;
+                if (requestsStatus[0] && requestsStatus[1])
+                    request().success(response)
+            })
+            .catch((error) => {
+                request().error(error);
+                request().debug();
+            });
+        }
+
+        if ( saves().findValue(`Options_Mototrisation${motorisationview.value.idMotorisation}`))
+        {
+            options.value = saves().findValue(`Options_Mototrisation${motorisationview.value.idMotorisation}`);
+            requestsStatus[1] = true;
+        }
+        else
+        {
+            controller().OptionsController.GetByIdMotorisation(motorisationview.value.idMotorisation)
+            .then((response) => {
+                options.value = response.data;
+                saves().save(`Options_Mototrisation${motorisationview.value.idMotorisation}`, caracteristiques.value);
+                requestsStatus[1] = true;
+                if (requestsStatus[0] && requestsStatus[1])
+                    request().success(response)
+            })
+            .catch((error) => {
+                request().error(error);
+                request().debug();
+            });
+        }
     }
 </script>
 
@@ -131,7 +191,7 @@
                 </div>
             </div>
             <div class="border-2 p-6 shadow-xl rounded-xl">
-                <h1 class="text-3xl font-bold">Prix : <span class="text-accent">{{ `${motorisationview.prix}` }}</span></h1>
+                <h1 class="text-3xl font-bold">Prix : <span class="text-accent">{{ `${Intl.NumberFormat('fr-FR', {  style: 'currency', currency: 'EUR' }).format(motorisationview.prix)}` }}</span></h1>
                 <div class="flex flex-col my-2 gap-3">
                     <div class="my-2">
                         <h1>Couleurs extérieures</h1>

@@ -21,10 +21,11 @@
         onMounted(async () => {
             controller().ModelesController.GetAll()
             .then((response) => {
+                console.log(response.data);
                 response.data.forEach(model => {
                     carousel.value.push({
                         title: model.nomModele,
-                        link: `http://${model.photo.url[0]}`
+                        link: `http://${model.photo.urlModel[0]}`
                     });
                 });
                 saves().save('MotorisationCarousel', carousel.value);
