@@ -32,7 +32,7 @@
 
     let motorisationview = ref({});
 
-    if(!saves().findValue(`Caractéristiques_Mototrisation${motorisationview.value.idMotorisation}`) && !saves().findValue(`Options_Mototrisation${motorisationview.value.idMotorisation}`))
+    if(!saves().findValue(`Caractéristiques_Mototrisation${motorisationview.value.idMotorisation}`) || !saves().findValue(`Options_Mototrisation${motorisationview.value.idMotorisation}`))
     {
         request().access();
     }
@@ -60,7 +60,7 @@
                     // Get Caracteristiques
                     controller().CaracteristiquesController.GetByIdMotorisation(motorisationview.value.idMotorisation)
                     .then((response) => {
-                        caracteristiques.value = Modeles.Caracteristique.fromJsonArray(response.data);
+                        caracteristiques.value = response.data;
                         saves().save(`Caractéristiques_Mototrisation${motorisationview.value.idMotorisation}`, caracteristiques.value);
                         requestsStatus[0] = true;
                         if (requestsStatus[0] && requestsStatus[1])
@@ -107,7 +107,7 @@
     async function SwitchMotorisation(){
         let requestsStatus = [false, false]
 
-        if(!saves().findValue(`Caractéristiques_Mototrisation${motorisationview.value.idMotorisation}`) && !saves().findValue(`Options_Mototrisation${motorisationview.value.idMotorisation}`))
+        if(!saves().findValue(`Caractéristiques_Mototrisation${motorisationview.value.idMotorisation}`) || !saves().findValue(`Options_Mototrisation${motorisationview.value.idMotorisation}`))
         {
             request().access();
         }
