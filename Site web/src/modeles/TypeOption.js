@@ -1,28 +1,28 @@
 import Option from './Option.js';
 
 class TypeOption {
-    #idType;
-    #nomType;
-    #obligatoire;
+    idType;
+    nomType;
+    obligatoire;
 
     // Navigation
-    #optionsNavigation;
+    optionsNavigation;
 
-    set idType(idType) { this.#idType = idType; }
-    set nomType(nomType) { this.#nomType = nomType; }
-    set obligatoire(obligatoire) { this.#obligatoire = obligatoire; }
-    set optionsNavigation(optionsNavigation) { this.#optionsNavigation = optionsNavigation; }
+    set idType(idType) { this.idType = idType; }
+    set nomType(nomType) { this.nomType = nomType; }
+    set obligatoire(obligatoire) { this.obligatoire = obligatoire; }
+    set optionsNavigation(optionsNavigation) { this.optionsNavigation = optionsNavigation; }
 
-    get idType() { return this.#idType; }
-    get nomType() { return this.#nomType; }
-    get obligatoire() { return this.#obligatoire; }
-    get optionsNavigation() { return this.#optionsNavigation; }
+    get idType() { return this.idType; }
+    get nomType() { return this.nomType; }
+    get obligatoire() { return this.obligatoire; }
+    get optionsNavigation() { return this.optionsNavigation; }
 
     constructor(idType, nomType, obligatoire, optionsNavigation) {
-        this.#idType = idType;
-        this.#nomType = nomType;
-        this.#obligatoire = obligatoire;
-        this.#optionsNavigation = optionsNavigation;
+        this.idType = idType;
+        this.nomType = nomType;
+        this.obligatoire = obligatoire;
+        this.optionsNavigation = optionsNavigation;
     }
 
     static fromJson(json) {

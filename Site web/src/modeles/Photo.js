@@ -1,30 +1,30 @@
 class Photo {
-    #idPhoto;
-    #nomCouleur;
-    #codeHexa;
-    #url;
+    idPhoto;
+    nomCouleur;
+    codeHexa;
+    url;
 
     // Navigation properties
-    #photoToOPM;
+    photoToOPM;
     
-    get idPhoto() { return this.#idPhoto; }
-    get nomCouleur() { return this.#nomCouleur; }
-    get codeHexa() { return this.#codeHexa; }
-    get photoToOPM() { return this.#photoToOPM; }
-    get url() { return this.#url; }
+    get idPhoto() { return this.idPhoto; }
+    get nomCouleur() { return this.nomCouleur; }
+    get codeHexa() { return this.codeHexa; }
+    get photoToOPM() { return this.photoToOPM; }
+    get url() { return this.url; }
 
-    set idPhoto(idPhoto) { this.#idPhoto = idPhoto; }
-    set nomCouleur(nomCouleur) { this.#nomCouleur = nomCouleur; }
-    set codeHexa(codeHexa) { this.#codeHexa = codeHexa; }
-    set photoToOPM(photoToOPM) { this.#photoToOPM = photoToOPM; }
-    set url(url) { this.#url = url; }
+    set idPhoto(idPhoto) { this.idPhoto = idPhoto; }
+    set nomCouleur(nomCouleur) { this.nomCouleur = nomCouleur; }
+    set codeHexa(codeHexa) { this.codeHexa = codeHexa; }
+    set photoToOPM(photoToOPM) { this.photoToOPM = photoToOPM; }
+    set url(url) { this.url = url; }
 
     constructor(idPhoto, nomCouleur, codeHexa, photoToOPM, url) {
-        this.#idPhoto = idPhoto;
-        this.#nomCouleur = nomCouleur;
-        this.#codeHexa = codeHexa;
-        this.#photoToOPM = photoToOPM;
-        this.#url = url;
+        this.idPhoto = idPhoto;
+        this.nomCouleur = nomCouleur;
+        this.codeHexa = codeHexa;
+        this.photoToOPM = photoToOPM;
+        this.url = url;
     }
 
     static fromJson(json) {

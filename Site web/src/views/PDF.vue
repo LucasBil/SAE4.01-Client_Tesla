@@ -55,7 +55,7 @@
 </script>
 
 <template>
-    <div id="PDF" class="flex flex-col gap-3 items-center m-3 p-6 min-h-screen border-4 border-neutral">
+    <div id="PDF" class="flex flex-col bg-base-100 gap-3 items-center m-3 p-6 min-h-screen border-4 border-neutral">
         <img class="" src="" alt="Voiture">
         <h1 class="text-xl font-bold">Motorisation : {{ motorisation.nomMotorisation }}</h1>
         <div class="flex flex-col gap-6">

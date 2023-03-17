@@ -7,6 +7,9 @@
     import saves from '../stores/saves';
     import pdf from '../stores/pdf';
 
+    // Modeles
+    import Modeles from '../modeles';
+
     // Composants
     import Carousel from '../components/Carousel.vue';
     import RadioButton from '../components/RadioButton.vue';
@@ -22,7 +25,7 @@
 
 
     // Variable
-    let model = ref({});
+    let model = ref();
     let motorisations = ref([{}]);
     let caracteristiques = ref([{}]);
     let options = ref([{}]);
@@ -38,12 +41,12 @@
         // Get Model
         controller().ModelesController.GetByName(nomModele)
         .then((response) => {
-            model.value = response.data;
+            model.value = Modeles.Modele.fromJson(response.data);
 
             // Get Motorisations
             controller().MotorisationsController.GetByIdModel(model.value.idModele)
             .then((response) => {
-                motorisations.value = response.data;
+                motorisations.value = Modeles.Motorisation.fromJsonArray(response.data);
                 motorisationview.value = motorisations.value[0];
 
                 let requestsStatus = [false, false]
@@ -57,7 +60,7 @@
                     // Get Caracteristiques
                     controller().CaracteristiquesController.GetByIdMotorisation(motorisationview.value.idMotorisation)
                     .then((response) => {
-                        caracteristiques.value = response.data;
+                        caracteristiques.value = Modeles.Caracteristique.fromJsonArray(response.data);
                         saves().save(`Caractéristiques_Mototrisation${motorisationview.value.idMotorisation}`, caracteristiques.value);
                         requestsStatus[0] = true;
                         if (requestsStatus[0] && requestsStatus[1])
@@ -77,7 +80,7 @@
                 // Get Options
                 controller().OptionsController.GetByIdMotorisation(motorisationview.value.idMotorisation)
                 .then((response) => {
-                    options.value = response.data;
+                    options.value = Modeles.Option.fromJsonArray(response.data);
                     console.log(options.value)
                     saves().save(`Options_Mototrisation${motorisationview.value.idMotorisation}`, caracteristiques.value);
                     requestsStatus[1] = true;

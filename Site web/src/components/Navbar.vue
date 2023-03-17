@@ -18,7 +18,7 @@
             ]
         },
         profil: {
-            type: Array,
+            type: Object,
             default: {
                 'Login' : [
                     {
