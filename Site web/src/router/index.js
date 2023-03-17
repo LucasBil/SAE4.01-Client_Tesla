@@ -54,6 +54,11 @@ const router = createRouter({
       component: () => import('../views/DevView.vue')
     },
     {
+      path: '/pdf',
+      name: 'pdf',
+      component: () => import('../views/PDF.vue')
+    },
+    {
       path: '/theme',
       name: 'theme',
       component: () => import('../views/ThemeView.vue')

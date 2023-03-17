@@ -5,6 +5,7 @@
     // Stores
     import { request , controller } from '../stores';
     import saves from '../stores/saves';
+    import pdf from '../stores/pdf';
 
     // Composants
     import Carousel from '../components/Carousel.vue';
@@ -251,7 +252,9 @@
                 </div>
             </div>
             <div class="col-span-2 flex flex-col items-center gap-3 p-6">
-                <button class="btn w-[75%] btn-outline btn-primary">Générer un résumé en PDF</button>
+                <RouterLink @click="pdf().save(motorisationview,selected_options,TotalPrice())" class="btn w-[75%] btn-outline btn-primary" :to="{ name:'pdf'}">
+                    Générer un résumé en PDF
+                </RouterLink>
                 <button class="btn w-[75%] btn-warning">Commander</button>
             </div>
         </div>
