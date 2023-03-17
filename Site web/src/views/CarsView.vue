@@ -44,7 +44,6 @@
             .then((response) => {
                 motorisations.value = response.data;
                 motorisationview.value = motorisations.value[0];
-                console.log(motorisationview.value)
 
                 let requestsStatus = [false, false]
                 if (saves().findValue(`Caractéristiques_Mototrisation${motorisationview.value.idMotorisation}`))
@@ -78,6 +77,7 @@
                 controller().OptionsController.GetByIdMotorisation(motorisationview.value.idMotorisation)
                 .then((response) => {
                     options.value = response.data;
+                    console.log(options.value)
                     saves().save(`Options_Mototrisation${motorisationview.value.idMotorisation}`, caracteristiques.value);
                     requestsStatus[1] = true;
                     if (requestsStatus[0] && requestsStatus[1])
@@ -150,6 +150,25 @@
             });
         }
     }
+
+    // Price Calcul
+    let selected_options = ref([])
+    function TotalPrice(){
+        console.log(selected_options.value)
+        let total = 0;
+        total += motorisationview.value.prix;
+        selected_options.value.forEach(option => {
+            total += option.coutAdditionnel;
+        });
+        return Intl.NumberFormat('fr-FR', {  style: 'currency', currency: 'EUR' }).format(total);
+    }
+
+
+    function Test(msg)
+    {
+        console.log(msg)
+    }
+
 </script>
 
 <template>
@@ -191,49 +210,14 @@
                 </div>
             </div>
             <div class="border-2 p-6 shadow-xl rounded-xl">
-                <h1 class="text-3xl font-bold">Prix : <span class="text-accent">{{ `${Intl.NumberFormat('fr-FR', {  style: 'currency', currency: 'EUR' }).format(motorisationview.prix)}` }}</span></h1>
+                <h1 class="text-3xl font-bold">Prix : <span class="text-accent">{{ `${TotalPrice()}` }}</span></h1>
+                <!-- Options -->
                 <div class="flex flex-col my-2 gap-3">
                     <div class="my-2">
-                        <h1>Couleurs extérieures</h1>
-                        <RadioButton :_radios="[
-                            {
-                                title: 'Blanc Nacré Multicouches',
-                                checked:true
-                            },
-                            {
-                                title: 'Noir Uni',
-                                info:'1800€'
-                            },
-                            {
-                                title: 'Gris Nuit Métallisé',
-                                info:'2200€'
-                            },
-                            {
-                                title: 'Bleu Outremer Métallisé',
-                                info:'2200€'
-                            },
-                            {
-                                title: 'Rouge Multicouches',
-                                info:'2200€'
-                            },
-                        ]"/>
-                    </div>
-                    <div class="my-2">
-                        <h1>Couleurs intérieures</h1>
-                        <RadioButton :_radios="[
-                            {
-                                title: 'Noir',
-                                checked:true
-                            },
-                            {
-                                title: 'Blanc',
-                                info:'2400€'
-                            },
-                            {
-                                title: 'Beige',
-                                info:'2400€'
-                            }
-                        ]"/>
+                        <h1 class="mb-2">Options :</h1>
+                        <select v-model="selected_options[0]" class="select select-primary w-full">
+                            <option v-for="option in options" :value="option">{{ `${option.libelleOption} ${(option.description)?`(${option.description})`:''}` }}</option>
+                        </select>
                     </div>
                     <div class="flex flex-col gap-3">
                         <div class="p-3">
