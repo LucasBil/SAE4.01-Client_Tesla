@@ -5,10 +5,14 @@
     import { request, controller } from '../stores';
     import saves from '../stores/saves.js';
 
+    // Modeles
+    import Modeles from '../modeles';
+
     // Composants
     import Carousel from '../components/Carousel.vue';
 
     // Variable
+    let modeles = ref();
     let carousel = ref([]);
     
     // Method
@@ -21,12 +25,9 @@
         onMounted(async () => {
             controller().ModelesController.GetAll()
             .then((response) => {
-                console.log(response.data);
-                response.data.forEach(model => {
-                    carousel.value.push({
-                        title: model.nomModele,
-                        link: `http://${model.photo.urlModel[0]}`
-                    });
+                modeles = Modeles.Modele.fromJsonArray(response.data);
+                modeles.forEach(model => {
+                    carousel.value.push( model.CarouselItem());
                 });
                 saves().save('MotorisationCarousel', carousel.value);
                 request().success(response);
