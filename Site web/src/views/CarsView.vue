@@ -29,6 +29,7 @@
     let motorisations = ref([{}]);
     let caracteristiques = ref([{}]);
     let options = ref([{}]);
+    let typeoptions = ref([{}]);
 
     let motorisationview = ref({});
 
@@ -72,17 +73,17 @@
                     });
                 }
 
-                if ( saves().findValue(`Options_Mototrisation${motorisationview.value.idMotorisation}`))
-                {
-                    options.value = saves().findValue(`Options_Mototrisation${motorisationview.value.idMotorisation}`);
-                    requestsStatus[1] = true;
-                }
+                // if ( saves().findValue(`Options_Mototrisation${motorisationview.value.idMotorisation}`))
+                // {
+                //     options.value = saves().findValue(`Options_Mototrisation${motorisationview.value.idMotorisation}`);
+                //     requestsStatus[1] = true;
+                // }
                 // Get Options
-                controller().OptionsController.GetByIdMotorisation(motorisationview.value.idMotorisation)
+                controller().TypeOptionsController.GetByIdMotorisation(motorisationview.value.idMotorisation)
                 .then((response) => {
-                    options.value = Modeles.Option.fromJsonArray(response.data);
-                    console.log(options.value)
-                    saves().save(`Options_Mototrisation${motorisationview.value.idMotorisation}`, caracteristiques.value);
+                    typeoptions.value = response.data;
+                    console.log(typeoptions.value)
+                    saves().save(`TypeOptions_Mototrisation${motorisationview.value.idMotorisation}`, caracteristiques.value);
                     requestsStatus[1] = true;
                     if (requestsStatus[0] && requestsStatus[1])
                         request().success(response)
@@ -140,10 +141,10 @@
         }
         else
         {
-            controller().OptionsController.GetByIdMotorisation(motorisationview.value.idMotorisation)
+            controller().TypeOptionsController.GetByIdMotorisation(motorisationview.value.idMotorisation)
             .then((response) => {
-                options.value = response.data;
-                saves().save(`Options_Mototrisation${motorisationview.value.idMotorisation}`, caracteristiques.value);
+                typeoptions.value = response.data;
+                saves().save(`TypeOptions_Mototrisation${motorisationview.value.idMotorisation}`, caracteristiques.value);
                 requestsStatus[1] = true;
                 if (requestsStatus[0] && requestsStatus[1])
                     request().success(response)
@@ -217,10 +218,10 @@
                 <h1 class="text-3xl font-bold">Prix : <span class="text-accent">{{ `${TotalPrice()}` }}</span></h1>
                 <!-- Options -->
                 <div class="flex flex-col my-2 gap-3">
-                    <div class="my-2">
-                        <h1 class="mb-2">Options :</h1>
-                        <select v-model="selected_options[0]" class="select select-primary w-full">
-                            <option v-for="option in options" :value="option">{{ `${option.libelleOption} ${(option.description)?`(${option.description})`:''}` }}</option>
+                    <div v-for="typeoption,key in typeoptions" class="my-2">
+                        <h1 class="mb-2">{{ typeoption.nomType }} :</h1>
+                        <select v-model="selected_options[key]" class="select select-primary w-full">
+                            <option v-for="option in typeoption.optionsNavigation" :value="option">{{ `${option.libelleOption} ${(option.description)?`(${option.description})`:''}` }}</option>
                         </select>
                     </div>
                     <div class="flex flex-col gap-3">
