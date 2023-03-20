@@ -4,6 +4,7 @@ import ModelesController from "./ModelesController";
 import CaracteristiquesController from "./CaracteristiquesController";
 import PhotosController from "./PhotosController";
 import TypeOptionsController from "./typeOptionsController";
+import ComptesController from "./ComptesController";
 
 const api = {
     OptionsController,
@@ -12,6 +13,7 @@ const api = {
     CaracteristiquesController,
     PhotosController,
     TypeOptionsController,
+    ComptesController,
 };
 
 export default api;

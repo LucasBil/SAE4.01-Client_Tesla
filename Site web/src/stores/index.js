@@ -8,7 +8,8 @@ const controller = defineStore( 'controller', () => {
     const CaracteristiquesController = api.CaracteristiquesController;
     const PhotosController = api.PhotosController;
     const TypeOptionsController = api.TypeOptionsController;
-    return { ModelesController, MotorisationsController, OptionsController, CaracteristiquesController, PhotosController, TypeOptionsController }}
+    const ComptesController = api.ComptesController;
+    return { ModelesController, MotorisationsController, OptionsController, CaracteristiquesController, PhotosController, TypeOptionsController, ComptesController }}
 )
 
 const request = defineStore( 'request', {

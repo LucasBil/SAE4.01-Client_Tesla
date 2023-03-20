@@ -1,6 +1,45 @@
 <script setup>
+  import { onMounted, ref } from "vue";
+
+  // Stores
+  import { request, controller } from '../stores';
+  import saves from '../stores/saves.js';
+
+  // Composants
   import InputForm from '../components/InputForm.vue';
+
+  let compte = ref({});
   
+  function Post()
+  {
+    request().access();
+    onMounted(async () => {
+        controller().ComptesController.Post()
+        .then((response) => {
+            console.log(response.data);
+            request().success(response);
+        })
+        .catch((error) => {
+            request().error(error);
+            request().debug();
+        });
+    });
+  }
+
+  request().access();
+  onMounted(async () => {
+      controller().ComptesController.GetAll()
+      .then((response) => {
+          console.log(response.data);
+          request().success(response);
+      })
+      .catch((error) => {
+          request().error(error);
+          request().debug();
+      });
+  });
+
+  //function
   function ProAccount(event)
   {
     if(event.target.classList.contains("select-error")) {
@@ -81,6 +120,7 @@
   }
 
   function formValidator(){
+    console.log(compte.value);
     let inputs = document.querySelectorAll("input");
     let select = document.querySelector("select");
     let error = false;
@@ -110,8 +150,7 @@
       <div class="flex flex-col gap-3">
         <div class="flex flex-col gap-1">
           <h1>Type de Compte : <span class="text-error">*</span></h1>
-          <select @change="ProAccount($event)" id="s_typCompt" class="select select-bordered w-full" required>
-            <option disabled selected>Type de Compte</option>
+          <select v-model="compte.typeCompte" @change="ProAccount($event)" id="s_typCompt" class="select select-bordered w-full" required>
             <option value="personnel">Personnel</option>
             <option value="proffessionnel">Proffessionel</option>
           </select>
@@ -130,7 +169,7 @@
               <span class="underline">i</span>
             </div>
           </div>
-          <input @change="InputValidator($event);" pattern="^(?=.*\d)(?=.*[A-Z])(?=.*[a-z])(?=.*[^\w\d\s:])([^\s]){8,}$" type="password" autocomplete="true" placeholder="************" class="input input-bordered w-full" required/>
+          <input v-model="compte.motDePasse" @change="InputValidator($event);" pattern="^(?=.*\d)(?=.*[A-Z])(?=.*[a-z])(?=.*[^\w\d\s:])([^\s]){8,}$" type="password" autocomplete="true" placeholder="************" class="input input-bordered w-full" required/>
         </div>
         <div class="flex flex-col gap-1">
           <h1>Confirmation mot de passe : <span class="text-error">*</span></h1>
@@ -152,9 +191,9 @@
         </div>
         <div class="grid grid-cols-3 gap-y-1 gap-3">
           <h1 class="col-span-3">Addresse :</h1>
-          <input @change="InputValidator($event)" type="number" min="1" max="1000" placeholder="9" class="input input-bordered w-full" />
-          <input @change="InputValidator($event)" type="text" placeholder="rue des usines" class="input input-bordered w-full"/>
-          <input @change="InputValidator($event)" type="text" placeholder="Annecy" class="input input-bordered w-full"/>
+          <input v-model="compte.numeroRue" @change="InputValidator($event)" type="number" min="1" max="1000" placeholder="9" class="input input-bordered w-full" />
+          <input v-model="compte.nomRue" @change="InputValidator($event)" type="text" placeholder="rue des usines" class="input input-bordered w-full"/>
+          <input v-model="compte.ville" @change="InputValidator($event)" type="text" placeholder="Annecy" class="input input-bordered w-full"/>
         </div>
         <div class="flex flex-col gap-1">
           <InputForm _label="Code Postal" :_input="{type:'text',placeholder:'74000'}" />
