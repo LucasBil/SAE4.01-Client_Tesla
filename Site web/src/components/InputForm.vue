@@ -1,13 +1,8 @@
 <script setup>
 
     defineProps({
-        _label: {
-            type: String,
-            default: '_label',
-            required: true
-        },
         _input:{
-            type: Array,
+            type: Object,
             default:{
                 type:'text',
                 placeholder:'_input.placeholder',
@@ -20,6 +15,13 @@
         }
     })
 
+    const emit = defineEmits(['emitValue']);
+
+    function EmitValue(params)
+    {
+        emit('emitValue',params);
+    }
+
     function InputValidator(event) {
         if(event.target.checkValidity() && event.target.value != "") 
         {
@@ -27,6 +29,7 @@
                 event.target.classList.remove("input-error","animate-pulse");
             }
             event.target.classList.add("input-success");
+            EmitValue(event.target.value);
             return true;
         } 
         else {
@@ -52,9 +55,5 @@
 </script>
 
 <template>
-    <div>
-        <h1>{{ _label }} : <span v-if="_input.required" class="text-error">*</span></h1>
-        <input v-if="_input.required" @change="InputValidator($event)" :type="_input.type" :min="_input.min" :max="_input.max" :pattern="_input.pattern" :placeholder="_input.placeholder" class="input input-bordered w-full" required />
-        <input v-else @change="InputValidator($event)" :type="_input.type" :min="_input.min" :max="_input.max" :pattern="_input.pattern" :placeholder="_input.placeholder" class="input input-bordered w-full"/>
-    </div>
+    <input  @change="InputValidator($event)" :type="_input.type" :min="_input.min" :max="_input.max" :pattern="_input.pattern" :placeholder="_input.placeholder" class="input input-bordered w-full" :required="_input.required" />
 </template>
