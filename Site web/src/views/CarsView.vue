@@ -73,7 +73,7 @@
                     });
                 }
 
-                // if ( saves().findValue(`Options_Mototrisation${motorisationview.value.idMotorisation}`))
+                // if ( saves().findValue(`TypeOptions_Mototrisation${motorisationview.value.idMotorisation}`))
                 // {
                 //     options.value = saves().findValue(`Options_Mototrisation${motorisationview.value.idMotorisation}`);
                 //     requestsStatus[1] = true;
@@ -164,8 +164,37 @@
         total += motorisationview.value.prix;
         selected_options.value.forEach(option => {
             total += option.coutAdditionnel;
+
         });
         return Intl.NumberFormat('fr-FR', {  style: 'currency', currency: 'EUR' }).format(total);
+    }
+
+    let checkOption = {}
+    function ToogleOption(option, event)
+    {
+        let value = event.checked
+        
+        //Les traveaux
+
+        if(value)
+        {
+            selected_options.value.push(option)
+            checkOption[event.name] = event.checked
+            if( event.name == "0" && checkOption["1"])
+                checkOption["1"] = false
+            if( event.name == "1" && checkOption["0"])
+                checkOption["0"] = false
+
+            Test(option)
+            // selected_options._rawValue[parseInt(event.name)].libelleOption
+        }
+        else
+        {
+            selected_options.value.pop(option)
+            checkOption[event.name] = event.checked
+        }
+
+
     }
 
 
@@ -177,11 +206,12 @@
 </script>
 
 <template>
+    <input type="checkbox" name="test" id="25" @click="Test(options)">
     <div v-if="request().requestState">
         <BreadCrumbs class="mx-6 mt-3" :_items="BreadCrumbsItems"/>
         <div class="h-[60vh] p-3">
             <Carousel :hiden="{
-                title:true,
+                title: true,
                 number:true
             }"/>
         </div>
@@ -197,7 +227,7 @@
                     <p>{{ motorisationview.description }}</p>
                 </div>
                 <div>
-                    <h2 class="text-lg">Caratéristique :</h2>
+                    <h2 class="text-lg font-bold">Caratéristique :</h2>
                     <div class="w-full stats stats-vertical shadow">
                         <div v-for="caracteristique in caracteristiques" class="stat">
                             <div v-if="!caracteristique.description" class="stat-title">{{caracteristique.nomCaracteristique }}</div>
@@ -219,38 +249,29 @@
                 <!-- Options -->
                 <div class="flex flex-col my-2 gap-3">
                     <div v-for="typeoption,key in typeoptions" class="my-2">
-                        <h1 class="mb-2">{{ typeoption.nomType }} :</h1>
-                        <select v-model="selected_options[key]" class="select select-primary w-full">
-                            <option v-for="option in typeoption.optionsNavigation" :value="option">{{ `${option.libelleOption} ${(option.description)?`(${option.description})`:''}` }}</option>
-                        </select>
-                    </div>
-                    <div class="flex flex-col gap-3">
-                        <div class="p-3">
-                            <div class="form-control">
-                                <label class="cursor-pointer label">
-                                <span class="label-text">Pack de pneus hiver Pirelli 19"</span> 
-                                <input type="checkbox" class="toggle toggle-accent" />
-                                </label>
-                            </div>
-                            <p class="text-sm">Pneus hiver Pirelli P Zero présentant une faible résistance au roulement et une forte adhérence sur les routes enneigées. Ce pack comprend quatre jantes Tempest de 19" et leurs pneus montés, ainsi que des enjoliveurs</p>
+                        <!-- Options sauf Autres options -->
+                        <div v-if="typeoption.nomType != 'Autres options'">
+                            <h1 class="mb-2">{{ typeoption.nomType }} :</h1>
+                            <select v-model="selected_options[key]" class="select select-primary w-full">
+                                <option v-for="option in typeoption.optionsNavigation" :value="option">{{ `${option.libelleOption} ${(option.description)?`(${option.description})`:''}` }}</option>
+                            </select>
                         </div>
-                        <div class="p-3">
-                            <div class="form-control">
-                                <label class="cursor-pointer label">
-                                <span class="label-text">Autopilot amélioré</span> 
-                                <input type="checkbox" class="toggle toggle-accent" />
-                                </label>
+                        <!-- Autres options -->
+                        <div v-else class="p-3">    
+                            <h1 class="mb-2">{{ typeoption.nomType }} :</h1>
+                            <div class="flex flex-col gap-3">
+
+                                <div v-for="option,key2 in typeoption.optionsNavigation" class="p-3">
+                                    <div class="form-control">
+                                        <label class="cursor-pointer label">
+                                            <span class="label-text">{{ option.libelleOption }}</span> 
+                                            <input :name="key2" @change="ToogleOption(option,$event.target)" type="checkbox" class="toggle toggle-accent"/>
+                                        </label>
+                                    </div>
+                                    <p class="text-sm">{{ option.description }}</p>
+                                </div>
+
                             </div>
-                            <p class="text-sm">Navigation en Autopilot Changement de voie auto Parking auto Sortie auto Sortie auto intelligente</p>
-                        </div>
-                        <div class="p-3">
-                            <div class="form-control">
-                                <label class="cursor-pointer label">
-                                <span class="label-text">Capacité de conduite entièrement autonome</span> 
-                                <input type="checkbox" class="toggle toggle-accent" />
-                                </label>
-                            </div>
-                            <p class="text-sm">Toutes les fonctionnalités de l'Autopilot de base et de l'Autopilot amélioré Reconnaissance et réaction aux feux de signalisation et aux panneaux stop</p>
                         </div>
                     </div>
                 </div>
