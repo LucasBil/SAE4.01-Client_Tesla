@@ -1,6 +1,8 @@
 <script setup>
     import { RouterLink, RouterView } from 'vue-router'
     import { onMounted, ref } from "vue";
+    import router from '../router';
+    import { sha3_512 } from "js-sha3";
 
     // Stores
     import { request, controller } from '../stores';
@@ -8,17 +10,21 @@
     // Composants
     import InputForm from '../components/InputForm.vue';
 
-    let mail = ref();
-    let mdp = ref();
+    let mail = ref("");
+    let mdp = ref("");
 
     async function Login()
     {
+        if(mail.value == "" || mdp.value == "")
+            return;
+        
+        console.log(mail.value);
         request().access();
         await controller().ComptesController.GetByEmail(mail.value)
         .then((response) => {
             if(response.data.motDePasse == mdp.value)
-                localStorage.user = response.data;
-            console.log(localStorage.user);
+                localStorage.user = JSON.stringify(response.data);
+                router.push('/');
             request().success(response);
         })
         .catch((error) => {
@@ -26,10 +32,15 @@
             request().debug();
         });
     }
+
+    function Test(msg)
+    {
+        console.log(msg);
+    }
 </script>
 
 <template>
-    <div class="hero min-h-[calc(100vh-288px)] bg-base-200">
+    <div v-if="request().requestState" class="hero min-h-[calc(100vh-288px)] bg-base-200">
     <div class="hero-content flex-col lg:flex-row-reverse">
         <div class="text-center lg:text-left">
         <h1 class="text-5xl py-6 font-bold">Se connecter</h1>
@@ -40,13 +51,13 @@
             <label class="label">
                 <span class="label-text">Email</span>
             </label>
-            <InputForm @emit-value="mail.value = $event" :_input="{type:'text',placeholder:'email',required:true}" />
+            <InputForm @emit-value="mail = $event" :_input="{type:'email',placeholder:'email',required:true}" />
             </div>
             <div class="form-control">
             <label class="label">
                 <span class="label-text">Mot de passe</span>
             </label>
-            <InputForm @emit-value="mdp.value = $event" :_input="{type:'password',pattern:'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*_-]).{8,}$',placeholder:'************',required:true}" />
+            <InputForm @emit-value="mdp = sha3_512($event)" :_input="{type:'password',pattern:'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*_-]).{8,}$',placeholder:'************',required:true}" />
             <label class="label">
                 <a href="#" class="label-text-alt link link-hover">Forgot password?</a>
             </label>
