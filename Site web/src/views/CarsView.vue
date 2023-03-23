@@ -14,6 +14,7 @@
     import Carousel from '../components/Carousel.vue';
     import RadioButton from '../components/RadioButton.vue';
     import BreadCrumbs from '../components/Breadcrumbs.vue';
+import { parse } from '@vue/compiler-dom';
 
     const route = useRoute();
     const nomModele = route.params.nomModele;
@@ -159,7 +160,7 @@
     // Price Calcul
     let selected_options = ref([])
     function TotalPrice(){
-        console.log(selected_options.value)
+        // console.log(selected_options.value)
         let total = 0;
         total += motorisationview.value.prix;
         selected_options.value.forEach(option => {
@@ -176,25 +177,33 @@
         
         //Les traveaux
 
+        checkOption["0"]
+
         if(value)
         {
+            checkOption[event.name] = event
+            if( checkOption["1"] && checkOption["0"] )
+            {
+                if(event.name == "0" && checkOption["1"].checked)
+                {
+                    checkOption["1"].checked = false
+                    selected_options.value.pop()
+                }
+                else if(event.name == "1" && checkOption["0"].checked)
+                {
+                    checkOption["0"].checked = false
+                    selected_options.value.pop()
+                }
+            }
             selected_options.value.push(option)
-            checkOption[event.name] = event.checked
-            if( event.name == "0" && checkOption["1"])
-                checkOption["1"] = false
-            if( event.name == "1" && checkOption["0"])
-                checkOption["0"] = false
-
-            Test(option)
-            // selected_options._rawValue[parseInt(event.name)].libelleOption
         }
         else
         {
-            selected_options.value.pop(option)
-            checkOption[event.name] = event.checked
+            selected_options.value.pop()
+            checkOption[event.name] = event
         }
 
-
+        console.log(selected_options._rawValue[0])
     }
 
 
@@ -206,7 +215,6 @@
 </script>
 
 <template>
-    <input type="checkbox" name="test" id="25" @click="Test(options)">
     <div v-if="request().requestState">
         <BreadCrumbs class="mx-6 mt-3" :_items="BreadCrumbsItems"/>
         <div class="h-[60vh] p-3">
