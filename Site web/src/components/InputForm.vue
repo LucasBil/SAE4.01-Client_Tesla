@@ -55,5 +55,5 @@
 </script>
 
 <template>
-    <input  @change="InputValidator($event)" :type="_input.type" :min="_input.min" :max="_input.max" :pattern="_input.pattern" :placeholder="_input.placeholder" class="input input-bordered w-full" :required="_input.required" />
+    <input @change="InputValidator($event)" :type="_input.type" :min="_input.min" :max="_input.max" :pattern="_input.pattern" :placeholder="_input.placeholder" class="input input-bordered w-full" :required="_input.required" />
 </template>
