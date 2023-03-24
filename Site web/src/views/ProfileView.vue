@@ -7,13 +7,17 @@
 
     function Progress()
     {
+        let count = 0;
+        let total = 0;
         for( let key in _compte)
         {
             if(_compte[key] == null || _compte[key] == "")
             {
-                console.log(key);
+                count += 1;
             }
+            total += 1;
         }
+        return ((total-count)/total)*100;
     }
 
     function SamePwd(event)
@@ -61,8 +65,8 @@
                 </div>
                 <div class="stat gap-2">
                     <div class="stat-title">Progression du compte</div>
-                    <div class="stat-value">10 %</div>
-                    <progress class="progress progress-success" value="10" max="100"></progress>
+                    <div class="stat-value">{{ Progress() }} %</div>
+                    <progress class="progress progress-success" :value="Progress()" max="100"></progress>
                 </div>
             </div>
         </div>
@@ -119,7 +123,7 @@
             </div>
             <div class="divider mx-[40%]"></div>
         </div>
-        <button @click="Progress()" class="btn">Modifier</button>
+        <button class="btn">Modifier</button>
         <button class="btn btn-warning">Supprimer Compte</button>
     </div>
 </template>
