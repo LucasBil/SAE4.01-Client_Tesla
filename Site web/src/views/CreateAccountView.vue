@@ -5,23 +5,23 @@
 
   // Stores
   import { request, controller } from '../stores';
+  import { compte } from '../stores/compte.js'
 
   // Composants
   import InputForm from '../components/InputForm.vue';
 
-  let compte = ref({});
+  let _compte = ref({});
 
   async function Post()
   {
     request().access();
-    await controller().ComptesController.Post(compte.value)
+    await controller().ComptesController.Post(_compte.value)
     .then((response) => {
         // Get Compte to database
-        controller().ComptesController.GetByEmail(compte.value.email)
+        controller().ComptesController.GetByEmail(_compte.value.email)
         .then((response) => {
             request().success(response);
-            localStorage.user = JSON.stringify(response.data);
-            router.push('/');
+            compte().login(response.data);
         })
         .catch((error) => {
           request().error(error);
@@ -107,7 +107,6 @@
     }
     else
     {
-      localStorage.user = compte.value;
       Post();
     }
   }
@@ -124,7 +123,7 @@
         <div class="flex flex-col gap-3">
           <div class="flex flex-col gap-1">
             <h1>Type de Compte : <span class="text-error">*</span></h1>
-            <select v-model="compte.typeCompte" @change="ProAccount($event)" id="s_typCompt" class="select select-bordered w-full" required>
+            <select v-model="_compte.typeCompte" @change="ProAccount($event)" id="s_typCompt" class="select select-bordered w-full" required>
               <option value="personnel">Personnel</option>
               <option value="proffessionnel">Proffessionel</option>
             </select>
@@ -132,16 +131,16 @@
           <div class="grid grid-cols-2 gap-3">
             <div>
               <h1>Nom : <span class="text-error">*</span></h1>
-              <InputForm @emit-value="compte.nomCompte = $event" :_input="{type:'text',placeholder:'Nom',required:true}" />
+              <InputForm @emit-value="_compte.nomCompte = $event" :_input="{type:'text',placeholder:'Nom',required:true}" />
             </div>
             <div>
               <h1>Prénom : <span class="text-error">*</span></h1>
-              <InputForm @emit-value="compte.prenomCompte = $event" :_input="{type:'text',placeholder:'Prénom',required:true}" />
+              <InputForm @emit-value="_compte.prenomCompte = $event" :_input="{type:'text',placeholder:'Prénom',required:true}" />
             </div>
           </div>
           <div class="flex flex-col gap-1">
             <h1>Email : <span class="text-error">*</span></h1>
-            <InputForm @emit-value="compte.email = $event" :_input="{type:'email',placeholder:'exemple@gmail.com',required:true}" />
+            <InputForm @emit-value="_compte.email = $event" :_input="{type:'email',placeholder:'exemple@gmail.com',required:true}" />
           </div>
           <div class="flex flex-col gap-1">
             <div class="grid grid-col grid-cols-10 gap-3">
@@ -150,7 +149,7 @@
                 <span class="underline">i</span>
               </div>
             </div>
-            <InputForm @emit-value="compte.motDePasse = sha3_512($event)" :_input="{type:'password',pattern:'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*_-]).{8,}$',placeholder:'************',required:true}" />
+            <InputForm @emit-value="_compte.motDePasse = sha3_512($event)" :_input="{type:'password',pattern:'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*_-]).{8,}$',placeholder:'************',required:true}" />
           </div>
           <div class="flex flex-col gap-1">
             <h1>Confirmation mot de passe : <span class="text-error">*</span></h1>
@@ -169,17 +168,17 @@
         <div class="flex flex-col gap-3">
           <div class="flex flex-col gap-1">
             <h1>Numéro de Téléphone :</h1>
-            <InputForm @emit-value="compte.numeroTelephone = $event" :_input="{type:'tel',placeholder:'+33000000000'}" />
+            <InputForm @emit-value="_compte.numeroTelephone = $event" :_input="{type:'tel',placeholder:'+33000000000'}" />
           </div>
           <div class="grid grid-cols-3 gap-y-1 gap-3">
             <h1 class="col-span-3">Addresse :</h1>
-            <InputForm @emit-value="compte.numeroRue = $event" :_input="{type:'number',placeholder:'9',min:1,max:1000}" />
-            <InputForm @emit-value="compte.nomRue = $event" :_input="{type:'text',placeholder:'rue des usines'}" />
-            <InputForm @emit-value="compte.ville = $event" :_input="{type:'text',placeholder:'Annecy'}" />
+            <InputForm @emit-value="_compte.numeroRue = $event" :_input="{type:'number',placeholder:'9',min:1,max:1000}" />
+            <InputForm @emit-value="_compte.nomRue = $event" :_input="{type:'text',placeholder:'rue des usines'}" />
+            <InputForm @emit-value="_compte.ville = $event" :_input="{type:'text',placeholder:'Annecy'}" />
           </div>
           <div class="flex flex-col gap-1">
             <h1 class="col-span-3">Code Postal :</h1>
-            <InputForm @emit-value="compte.codepostal = $event" :_input="{type:'text',placeholder:'74000'}" />
+            <InputForm @emit-value="_compte.codepostal = $event" :_input="{type:'text',placeholder:'74000'}" />
           </div>
         </div>
       </div>
@@ -195,10 +194,12 @@
       <div class="hidden col-span-2 m-3 p-6 rounded-xl shadow-xl  pro">
         <div class="flex flex-col gap-3">
           <div class="flex flex-col gap-1">
-            <InputForm @emit-value="compte.nomEntreprise = $event" _label="Nom de l'entreprise" :_input="{type:'text',placeholder:'Tesla'}" />
+            <h1>Nom Entreprise : <span class="text-error">*</span></h1>
+            <InputForm @emit-value="_compte.nomEntreprise = $event" _label="Nom de l'entreprise" :_input="{type:'text',placeholder:'Tesla'}" />
           </div>
           <div class="flex flex-col gap-1">
-            <InputForm @emit-value="compte.numTVA = $event" _label="Numéro de TVA" :_input="{type:'text',pattern:'^[A-Z]{2}[0-9]{11}',placeholder:'FR0000000000'}" />
+            <h1>TVA : <span class="text-error">*</span></h1>
+            <InputForm @emit-value="_compte.numTVA = $event" _label="Numéro de TVA" :_input="{type:'text',pattern:'^[A-Z]{2}[0-9]{11}',placeholder:'FR0000000000'}" />
           </div>
         </div>
       </div>

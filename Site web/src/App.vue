@@ -5,12 +5,15 @@ import router from './router';
 
 // Stores
 import { request } from './stores'
+import { compte } from './stores/compte.js'
 
 // Composants
 import IconTesla from './components/icons/IconTesla.vue'
 import Menu from './components/Menu.vue';
 import FooterView from './components/Footer.vue';
 import WaitingScreen from './components/WaitingScreen.vue';
+
+console.log(localStorage.compte);
 
 // Data
 let _menu = [
@@ -21,34 +24,6 @@ let _menu = [
           { name: 'Acessoires', link: '/mershs'},
           { name:'Theme', link: '/theme'},
         ]
-
-let _profil = {
-    'name': (localStorage.user)?JSON.parse(localStorage.user).nomCompte : 'Compte',
-    'links' : [
-        (localStorage.user)?{
-            'name': 'Profile',
-            'link': '/profile'
-        }:{'hidden': 'true'},
-        (!localStorage.user)?{
-            'name': 'Connection',
-            'link': '/login'
-        }:{'hidden': 'true'},
-        (!localStorage.user)?{
-            'name': 'Créer un Compte',
-            'link': '/createaccount'
-        }:{'hidden': 'true'},
-        (localStorage.user)?{
-            'name': 'Logout',
-            'event' : 'logout'
-        }:{'hidden': 'true'},
-    ]
-  }
-
-  function Logout()
-  {
-    localStorage.removeItem('user');
-    router.push('/');
-  }
 </script>
 
 <template>
@@ -74,20 +49,20 @@ let _profil = {
       <label tabindex="0" class="btn btn-ghost btn-circle">
         <div class="indicator">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
-            <span class="badge badge-sm indicator-item">0</span>
+            <span class="badge badge-sm indicator-item">{{ compte().panier.length }}</span>
         </div>
       </label>
     
       <!-- Dropdown menu Connection -->
       <div class="dropdown dropdown-end">
-        <label tabindex="0" class="btn btn-ghost">{{ _profil.name }}</label>
+        <label tabindex="0" class="btn btn-ghost">{{ compte().menu().name }}</label>
           <ul tabindex="0" class="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52">
-              <li v-for="item in _profil.links">
+              <li v-for="item in compte().menu().links">
                   <RouterLink v-if="item.link" :to="{path:item.link}" class="justify-between">
                       {{ item.name }}
                       <span v-if="item.badge" class="badge">{{ item.badge }}</span>
                   </RouterLink>
-                  <span @click="(item.event == 'logout')?Logout():null" v-else class="justify-between" :class="(item.hidden)?'hidden':''">
+                  <span @click="(item.event == 'logout')?compte().logout():null" v-else class="justify-between" :class="(item.hidden)?'hidden':''">
                       {{ item.name }}
                       <span v-if="item.badge" class="badge">{{ item.badge }}</span>
                   </span>
