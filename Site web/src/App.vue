@@ -5,12 +5,15 @@ import router from './router';
 
 // Stores
 import { request } from './stores'
+import { compte } from './stores/compte.js'
 
 // Composants
 import IconTesla from './components/icons/IconTesla.vue'
 import Menu from './components/Menu.vue';
 import FooterView from './components/Footer.vue';
 import WaitingScreen from './components/WaitingScreen.vue';
+
+console.log(localStorage.compte);
 
 // Data
 let _menu = [
@@ -21,34 +24,6 @@ let _menu = [
           { name: 'Acessoires', link: '/mershs'},
           { name:'Theme', link: '/theme'},
         ]
-
-let _profil = {
-    'name': (localStorage.user)?JSON.parse(localStorage.user).nomCompte : 'Compte',
-    'links' : [
-        (localStorage.user)?{
-            'name': 'Profile',
-            'link': '/profile'
-        }:{'hidden': 'true'},
-        (!localStorage.user)?{
-            'name': 'Connection',
-            'link': '/login'
-        }:{'hidden': 'true'},
-        (!localStorage.user)?{
-            'name': 'Créer un Compte',
-            'link': '/createaccount'
-        }:{'hidden': 'true'},
-        (localStorage.user)?{
-            'name': 'Logout',
-            'event' : 'logout'
-        }:{'hidden': 'true'},
-    ]
-  }
-
-  function Logout()
-  {
-    localStorage.removeItem('user');
-    router.push('/');
-  }
 </script>
 
 <template>
@@ -80,14 +55,14 @@ let _profil = {
     
       <!-- Dropdown menu Connection -->
       <div class="dropdown dropdown-end">
-        <label tabindex="0" class="btn btn-ghost">{{ _profil.name }}</label>
+        <label tabindex="0" class="btn btn-ghost">{{ compte().menu().name }}</label>
           <ul tabindex="0" class="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52">
-              <li v-for="item in _profil.links">
+              <li v-for="item in compte().menu().links">
                   <RouterLink v-if="item.link" :to="{path:item.link}" class="justify-between">
                       {{ item.name }}
                       <span v-if="item.badge" class="badge">{{ item.badge }}</span>
                   </RouterLink>
-                  <span @click="(item.event == 'logout')?Logout():null" v-else class="justify-between" :class="(item.hidden)?'hidden':''">
+                  <span @click="(item.event == 'logout')?compte().logout():null" v-else class="justify-between" :class="(item.hidden)?'hidden':''">
                       {{ item.name }}
                       <span v-if="item.badge" class="badge">{{ item.badge }}</span>
                   </span>

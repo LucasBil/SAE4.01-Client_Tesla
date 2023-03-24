@@ -6,6 +6,7 @@
 
     // Stores
     import { request, controller } from '../stores';
+    import { compte } from '../stores/compte.js'
 
     // Composants
     import InputForm from '../components/InputForm.vue';
@@ -23,19 +24,13 @@
         await controller().ComptesController.GetByEmail(mail.value)
         .then((response) => {
             if(response.data.motDePasse == mdp.value)
-                localStorage.user = JSON.stringify(response.data);
-                router.push('/');
+                compte().login(response.data);
             request().success(response);
         })
         .catch((error) => {
             request().error(error);
             request().debug();
         });
-    }
-
-    function Test(msg)
-    {
-        console.log(msg);
     }
 </script>
 
