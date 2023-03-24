@@ -6,9 +6,11 @@ const compte = defineStore( 'compte', {
     state: () => {
         return {
             compte: ref(null),
+            panier: ref([]),
         }
     },
     actions: {
+        // Compte
         login(compte) {
             localStorage.compte = JSON.stringify(compte);
             this.compte = compte;
@@ -20,7 +22,6 @@ const compte = defineStore( 'compte', {
             router.push('/');
         },
         menu() {
-            console.log('menu');
             return {
                 'name': (localStorage.compte)?JSON.parse(localStorage.compte).nomCompte : 'Compte',
                 'links' : [
@@ -42,8 +43,37 @@ const compte = defineStore( 'compte', {
                     }:{'hidden': 'true'},
                 ]
               }
-        }
+        },
+        getJsoncompte() {
+            let response = JSON.parse(localStorage.compte);
+            return response;
+        },
+
+        // Panier
+        addPanier(produit) {
+            let panier = this.getPanier();
+            if(panier == null) {
+                panier = [];
+            }
+            panier.push(produit);
+            localStorage.panier = JSON.stringify(panier);
+            this.panier = panier;
+        },
+        removePanier(produit) {
+            let panier = this.getPanier();
+            if(panier == null) {
+                panier = [];
+            }
+            panier = panier.filter(function(value, index, arr){
+                return value.id != produit.id;
+            });
+            localStorage.panier = JSON.stringify(panier);
+            this.panier = panier;
+        },
+        getPanier() {
+            let response = JSON.parse(localStorage.panier);
+            return response;
+        },
     },
 })
-
 export { compte }
