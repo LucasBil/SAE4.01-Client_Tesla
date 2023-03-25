@@ -16,6 +16,11 @@ const compte = defineStore( 'compte', {
             this.compte = compte;
             router.push('/');
         },
+        editCompte(compte) {
+            localStorage.compte = JSON.stringify(compte);
+            this.compte = compte;
+            router.go(0);
+        },
         logout() {
             localStorage.removeItem('compte');
             this.compte = null;

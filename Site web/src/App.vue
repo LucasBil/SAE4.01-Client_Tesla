@@ -1,7 +1,5 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
-import { onMounted, ref } from "vue";
-import router from './router';
 
 // Stores
 import { request } from './stores'
@@ -12,8 +10,6 @@ import IconTesla from './components/icons/IconTesla.vue'
 import Menu from './components/Menu.vue';
 import FooterView from './components/Footer.vue';
 import WaitingScreen from './components/WaitingScreen.vue';
-
-console.log(localStorage.compte);
 
 // Data
 let _menu = [
