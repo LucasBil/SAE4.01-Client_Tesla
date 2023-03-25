@@ -93,92 +93,94 @@
 </script>
 
 <template>
-    <div class="stats w-full">
-        <div class="stat flex flex-col items-center gap-2">
-            <div class="stat-title">Bonjour, {{ _compte.prenomCompte }} {{ _compte.nomCompte }}</div>
-            <div class="stats stats-vertical md:stats-horizontal shadow">
-                <div class="stat">
-                    <div class="stat-title">Type de Compte</div>
-                    <div class="stat-value">{{ _compte.typeCompte }}</div>
+    <div v-if="request().requestState">
+        <div class="stats w-full">
+            <div class="stat flex flex-col items-center gap-2">
+                <div class="stat-title">Bonjour, {{ _compte.prenomCompte }} {{ _compte.nomCompte }}</div>
+                <div class="stats stats-vertical md:stats-horizontal shadow">
+                    <div class="stat">
+                        <div class="stat-title">Type de Compte</div>
+                        <div class="stat-value">{{ _compte.typeCompte }}</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-title">Donnée récoltée</div>
+                        <div class="stat-value">{{ (_compte.dataCollect)?'oui':'non' }}</div>
+                    </div>
+                    <div class="stat gap-2">
+                        <div class="stat-title">Progression du compte</div>
+                        <div class="stat-value">{{ Progress() }} %</div>
+                        <progress class="progress progress-success" :value="Progress()" max="100"></progress>
+                    </div>
                 </div>
-                <div class="stat">
-                    <div class="stat-title">Donnée récoltée</div>
-                    <div class="stat-value">{{ (_compte.dataCollect)?'oui':'non' }}</div>
+            </div>
+        </div>
+        <div class="divider mx-4"></div>
+        <!-- Modification Compte -->
+        <div class="flex flex-col m-3 gap-3">
+            <!-- Compte Perso -->
+            <div class="flex flex-col gap-1">
+                <h1>Email :</h1>
+                <InputForm :_input="{ type:'text',placeholder:`${ _compte.email }`}" disabled/>
+            </div>
+            <div class="grid grid-cols-2 gap-3">
+                <div class="flex flex-col gap-1">
+                    <h1>Nom :</h1>
+                    <InputForm @emit-value="_compte.nomCompte = $event" :_input="{ type:'text',placeholder:`${ _compte.nomCompte }`}"/>
                 </div>
-                <div class="stat gap-2">
-                    <div class="stat-title">Progression du compte</div>
-                    <div class="stat-value">{{ Progress() }} %</div>
-                    <progress class="progress progress-success" :value="Progress()" max="100"></progress>
+                <div class="flex flex-col gap-1">
+                    <h1>Prénom :</h1>
+                    <InputForm @emit-value="_compte.prenomCompte = $event" :_input="{ type:'text',placeholder:`${ _compte.prenomCompte }`}"/>
                 </div>
             </div>
-        </div>
-    </div>
-    <div class="divider mx-4"></div>
-    <!-- Modification Compte -->
-    <div class="flex flex-col m-3 gap-3">
-        <!-- Compte Perso -->
-        <div class="flex flex-col gap-1">
-            <h1>Email :</h1>
-            <InputForm :_input="{ type:'text',placeholder:`${ _compte.email }`}" disabled/>
-        </div>
-        <div class="grid grid-cols-2 gap-3">
             <div class="flex flex-col gap-1">
-                <h1>Nom :</h1>
-                <InputForm @emit-value="_compte.nomCompte = $event" :_input="{ type:'text',placeholder:`${ _compte.nomCompte }`}"/>
+                <h1>Mot de Passe :</h1>
+                <InputForm @emit-value="_compte.motDePasse = sha3_512($event)" :_input="{type:'password',pattern:'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*_-]).{8,}$',placeholder:'************'}"/>
             </div>
             <div class="flex flex-col gap-1">
-                <h1>Prénom :</h1>
-                <InputForm @emit-value="_compte.prenomCompte = $event" :_input="{ type:'text',placeholder:`${ _compte.prenomCompte }`}"/>
-            </div>
-        </div>
-        <div class="flex flex-col gap-1">
-            <h1>Mot de Passe :</h1>
-            <InputForm @emit-value="_compte.motDePasse = sha3_512($event)" :_input="{type:'password',pattern:'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*_-]).{8,}$',placeholder:'************'}"/>
-        </div>
-        <div class="flex flex-col gap-1">
-            <h1>Confirmation mot de passe :</h1>
-            <InputForm @change="SamePwd($event)" :_input="{type:'password',pattern:'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*_-]).{8,}$',placeholder:'************'}" />
-        </div>
-        <div class="flex flex-col gap-1">
-            <h1>Adresse :</h1>
-            <div class="flex flex-col md:grid md:grid-cols-4 gap-3">
-                <InputForm @emit-value="_compte.numeroRue = $event" :_input="{ type:'number',placeholder:`${ _compte.numeroRue }`, min:0}"/>
-                <InputForm @emit-value="_compte.nomRue = $event" :_input="{ type:'text',placeholder:`${ _compte.nomRue }`}"/>
-                <InputForm @emit-value="_compte.ville = $event" :_input="{ type:'text',placeholder:`${ _compte.ville }`}"/>
-                <InputForm @emit-value="_compte.codepostal = $event" :_input="{type:'text',placeholder:`${ _compte.codepostal }`}" />
-            </div>
-        </div>
-        <div class="flex flex-col gap-1">
-            <h1>Numéro de Téléphone :</h1>
-            <InputForm @emit-value="_compte.numeroTelephone = $event" :_input="{type:'tel',placeholder:`${ _compte.numeroTelephone }`}" />
-        </div>
-        <div class="divider mx-[40%]"></div>
-        <!-- Compte Pro -->
-        <div v-if="_compte.typeCompte == 'professionnel'" class="flex flex-col gap-3">
-            <div class="flex flex-col gap-1">
-                <h1>Nom Entreprise :</h1>
-                <InputForm @emit-value="_compte.nomEntreprise = $event" :_input="{type:'text',placeholder:`${ _compte.nomEntreprise }`}" />
+                <h1>Confirmation mot de passe :</h1>
+                <InputForm @change="SamePwd($event)" :_input="{type:'password',pattern:'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*_-]).{8,}$',placeholder:'************'}" />
             </div>
             <div class="flex flex-col gap-1">
-                <h1>TVA :</h1>
-                <InputForm @emit-value="_compte.numTVA = $event" :_input="{type:'text',pattern:'^[A-Z]{2}[0-9]{11}',placeholder:`${ _compte.numTVA }`}" />
+                <h1>Adresse :</h1>
+                <div class="flex flex-col md:grid md:grid-cols-4 gap-3">
+                    <InputForm @emit-value="_compte.numeroRue = $event" :_input="{ type:'number',placeholder:`${ _compte.numeroRue }`, min:0}"/>
+                    <InputForm @emit-value="_compte.nomRue = $event" :_input="{ type:'text',placeholder:`${ _compte.nomRue }`}"/>
+                    <InputForm @emit-value="_compte.ville = $event" :_input="{ type:'text',placeholder:`${ _compte.ville }`}"/>
+                    <InputForm @emit-value="_compte.codepostal = $event" :_input="{type:'text',placeholder:`${ _compte.codepostal }`}" />
+                </div>
+            </div>
+            <div class="flex flex-col gap-1">
+                <h1>Numéro de Téléphone :</h1>
+                <InputForm @emit-value="_compte.numeroTelephone = $event" :_input="{type:'tel',placeholder:`${ _compte.numeroTelephone }`}" />
             </div>
             <div class="divider mx-[40%]"></div>
+            <!-- Compte Pro -->
+            <div v-if="_compte.typeCompte == 'professionnel'" class="flex flex-col gap-3">
+                <div class="flex flex-col gap-1">
+                    <h1>Nom Entreprise :</h1>
+                    <InputForm @emit-value="_compte.nomEntreprise = $event" :_input="{type:'text',placeholder:`${ _compte.nomEntreprise }`}" />
+                </div>
+                <div class="flex flex-col gap-1">
+                    <h1>TVA :</h1>
+                    <InputForm @emit-value="_compte.numTVA = $event" :_input="{type:'text',pattern:'^[A-Z]{2}[0-9]{11}',placeholder:`${ _compte.numTVA }`}" />
+                </div>
+                <div class="divider mx-[40%]"></div>
+            </div>
+            <button @click="popup = {
+                show : true,
+                title : 'Modification',
+                description : 'Toutes les modifications seront prises en compte voulez-vous continuer ?',
+                confirm : true
+            };" class="btn">Modifier</button>
+            <button @click="popup = {
+                show : true,
+                title : 'Suppression',
+                description : 'Cette action est irréversible voulez-vous quand même continuer ?',
+                confirm : true
+            };" class="btn btn-warning">Supprimer Compte</button>
         </div>
-        <button @click="popup = {
-            show : true,
-            title : 'Modification',
-            description : 'Toutes les modifications seront prises en compte voulez-vous continuer ?',
-            confirm : true
-        };" class="btn">Modifier</button>
-        <button @click="popup = {
-            show : true,
-            title : 'Suppression',
-            description : 'Cette action est irréversible voulez-vous quand même continuer ?',
-            confirm : true
-        };" class="btn btn-warning">Supprimer Compte</button>
+    
+        <!-- Popup -->
+        <Popup :show="popup.show" @confirm="(popup.title == 'Modification')?Put():Delete()" @close="popup.show = false" :title="popup.title" :description="popup.description" :confirm="popup.confirm"/>
     </div>
-
-    <!-- Popup -->
-    <Popup :show="popup.show" @confirm="(popup.title == 'Modification')?Put():Delete()" @close="popup.show = false" :title="popup.title" :description="popup.description" :confirm="popup.confirm"/>
 </template>
