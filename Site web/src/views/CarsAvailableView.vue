@@ -1,6 +1,31 @@
 <script setup>
+    import { request, controller } from '../stores';
+    import { onMounted, ref } from "vue";
+    import saves from '../stores/saves.js';
     import IconFilter from '../components/icons/IconFilter.vue';
     import Card from '../components/Card.vue';
+
+    let motorisations = ref();
+
+    if (saves().findValue('MotorisationDispos')){
+        motorisations.value = saves().findValue('MotorisationDispos').value
+    }
+    else
+    {
+        request().access();
+        onMounted(async () => {
+            controller().VehiculeDemonstrationsController.GetAll()
+            .then((response) => {
+                motorisations.value = response.data;
+                saves().save('MotorisationDispos', motorisations.value);
+                request().success(response);
+                console.log(motorisations.value);
+            })
+            .catch((error) => {
+                request().error(error);
+            });
+        });
+    }
 </script>
 
 <template>
@@ -12,7 +37,7 @@
                 <IconFilter class="h-full"/> Filtrer
             </label>
             <div class="md:grid md:grid-cols-3 lg:grid-cols-2">
-                <Card class="m-3" v-for="i in 20"/>
+                <Card class="m-3" v-for="moto in motorisations" :title="moto.motosVehiculeNavigation.nomMotorisation" :resume="moto.motosVehiculeNavigation.description" :_img="moto.motosVehiculeNavigation.motorisationToOPM[0].photoOPM.url[0]"/>
             </div>
         </div> 
         <div class="drawer-side">
