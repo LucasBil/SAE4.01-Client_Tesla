@@ -17,7 +17,7 @@ let _menu = [
             { name: 'Configurable', link: '/models'},
             { name: 'Disponible', link: '/carsavailable' }
           ]},
-          { name: 'Acessoires', link: '/mershs'},
+          { name: 'Accessoires', link: '/mershs'},
           { name:'Theme', link: '/theme'},
         ]
 </script>

@@ -16,7 +16,7 @@ class ComptesController extends ControllerManager {
     }
 
     GetByIdCB(idCB) {
-        return axios.get(`${ControllerManager.baseURL}/${this.name}/ByIdCB/${idCB}`);
+        return axios.get(`${ControllerManager.baseURL}/${this.name}/ByIdCB/${idCB}`, {headers : {"Authorization" : `Bearer ${ControllerManager.token}`}});
     }
 
     GetByIdSepa(idSepa) {
