@@ -14,6 +14,7 @@
     import Carousel from '../components/Carousel.vue';
     import RadioButton from '../components/RadioButton.vue';
     import BreadCrumbs from '../components/Breadcrumbs.vue';
+    import { parse } from '@vue/compiler-dom';
 
     const route = useRoute();
     const nomModele = route.params.nomModele;
@@ -157,15 +158,15 @@
     }
 
     // Price Calcul
-    let selected_options = ref([])
+    let selected_options = {}
     function TotalPrice(){
-        console.log(selected_options.value)
         let total = 0;
         total += motorisationview.value.prix;
-        selected_options.value.forEach(option => {
-            total += option.coutAdditionnel;
-
-        });
+        for (let [key,value] in selected_options)
+        {
+            total += value
+            print(value)
+        }
         return Intl.NumberFormat('fr-FR', {  style: 'currency', currency: 'EUR' }).format(total);
     }
 
@@ -173,30 +174,35 @@
     function ToogleOption(option, event)
     {
         let value = event.checked
-        
+        // console.log(option.idType)
+
         //Les traveaux
-
-        if(value)
+        if(value || [1,2,3].includes(option.idType))
         {
-            selected_options.value.push(option)
-            checkOption[event.name] = event.checked
-            if( event.name == "0" && checkOption["1"])
-                checkOption["1"] = false
-            if( event.name == "1" && checkOption["0"])
-                checkOption["0"] = false
-
-            Test(option)
-            // selected_options._rawValue[parseInt(event.name)].libelleOption
+            checkOption[event.title] = event
+            if( checkOption["4"] && checkOption["3"] )
+            {
+                if(event.title == "3" && checkOption["4"].checked)
+                {
+                    checkOption["4"].checked = false
+                    selected_options["4"] = 0
+                }
+                else if(event.title == "4" && checkOption["3"].checked)
+                {
+                    checkOption["3"].checked = false
+                    selected_options["3"] = 0
+                }
+            }
+            selected_options[event.title] = option.coutAdditionnel
         }
         else
         {
-            selected_options.value.pop(option)
-            checkOption[event.name] = event.checked
+            selected_options[event.title] = 0
+            checkOption[event.title] = option.coutAdditionnel
         }
-
-
+        console.log(selected_options)
+        
     }
-
 
     function Test(msg)
     {
@@ -206,7 +212,7 @@
 </script>
 
 <template>
-    <input type="checkbox" name="test" id="25" @click="Test(options)">
+    <input type="checkbox"  @click="Test($event.target)">
     <div v-if="request().requestState">
         <BreadCrumbs class="mx-6 mt-3" :_items="BreadCrumbsItems"/>
         <div class="h-[60vh] p-3">
@@ -249,11 +255,11 @@
                 <!-- Options -->
                 <div class="flex flex-col my-2 gap-3">
                     <div v-for="typeoption,key in typeoptions" class="my-2">
-                        <!-- Options sauf Autres options -->
+                        <!-- Options sauf Autres options -->    
                         <div v-if="typeoption.nomType != 'Autres options'">
                             <h1 class="mb-2">{{ typeoption.nomType }} :</h1>
                             <select v-model="selected_options[key]" class="select select-primary w-full">
-                                <option v-for="option in typeoption.optionsNavigation" :value="option">{{ `${option.libelleOption} ${(option.description)?`(${option.description})`:''}` }}</option>
+                                <option :title="key" @click="ToogleOption(selected_options[key], $event.target)" v-for="option in typeoption.optionsNavigation" :value="option ">{{ `${option.libelleOption} ${(option.description)?`(${option.description})`:''}` }}</option>
                             </select>
                         </div>
                         <!-- Autres options -->
@@ -265,7 +271,7 @@
                                     <div class="form-control">
                                         <label class="cursor-pointer label">
                                             <span class="label-text">{{ option.libelleOption }}</span> 
-                                            <input :name="key2" @change="ToogleOption(option,$event.target)" type="checkbox" class="toggle toggle-accent"/>
+                                            <input :title="key+(key2)" @change="ToogleOption(option,$event.target)" type="checkbox" class="toggle toggle-accent"/>
                                         </label>
                                     </div>
                                     <p class="text-sm">{{ option.description }}</p>

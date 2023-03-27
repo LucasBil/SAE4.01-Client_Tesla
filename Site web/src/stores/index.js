@@ -38,8 +38,8 @@ const request = defineStore( 'request', {
         error(error) { // Requete terminée avec erreur
             this.requestState = true;
             this.requestError = true;
-            //this.typeRequest = error.config.method;
-            //this.requestCode = `${error.response.status} ${error.response.statusText}`;
+            this.typeRequest = error.config.method;
+            this.requestCode = `${error.response.status} ${error.response.statusText}`;
         },
         debug(){ // Debug
             console.log(`RequestState : ${this.requestState}`);
