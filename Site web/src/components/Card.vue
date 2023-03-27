@@ -18,7 +18,7 @@
         _img: {
             type: String,
             required: true,
-            default: 'https://img1.ak.crunchyroll.com/i/spire1/d5ad9e0a13330935dd0905b2904b00041588258124_full.jpg'
+            default: 'img1.ak.crunchyroll.com/i/spire1/d5ad9e0a13330935dd0905b2904b00041588258124_full.jpg'
         },
         _badge:{
             type: String
@@ -30,7 +30,7 @@
     <div class="card lg:card-side bg-base-100 shadow-xl">
         <span v-if="_badge" class=" absolute right-0 m-3 p-4 badge badge-lg">{{_badge}}</span>
         <figure>
-            <img class="object-cover h-full" :src="_img" alt="Album"/>
+            <img class="object-cover h-full" :src="`http://${_img}`" alt="Album"/>
         </figure>
         <div class="card-body">
             <h2 class="card-title">{{ title }}</h2>

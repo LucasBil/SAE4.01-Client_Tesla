@@ -19,7 +19,6 @@
                 motorisations.value = response.data;
                 saves().save('MotorisationDispos', motorisations.value);
                 request().success(response);
-                console.log(motorisations.value);
             })
             .catch((error) => {
                 request().error(error);
