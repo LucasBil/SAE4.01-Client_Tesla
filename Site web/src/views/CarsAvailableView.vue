@@ -36,7 +36,7 @@
                 <IconFilter class="h-full"/> Filtrer
             </label>
             <div class="md:grid md:grid-cols-3 lg:grid-cols-2">
-                <Card class="m-3" v-for="moto in motorisations" :title="moto.motosVehiculeNavigation.nomMotorisation" :resume="moto.motosVehiculeNavigation.description" :_img="moto.motosVehiculeNavigation.motorisationToOPM[0].photoOPM.url[0]"/>
+                <Card class="m-3" v-for="moto in motorisations" :title="moto.motosVehiculeNavigation.nomMotorisation" :resume="moto.motosVehiculeNavigation.description" :_img="moto.motosVehiculeNavigation.motorisationToOPM[0].photoOPM.url[0]" />
             </div>
         </div> 
         <div class="drawer-side">
