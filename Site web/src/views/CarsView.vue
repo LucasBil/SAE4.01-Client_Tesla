@@ -13,7 +13,7 @@
     // Composants
     import Carousel from '../components/Carousel.vue';
     import BreadCrumbs from '../components/Breadcrumbs.vue';
-import { createPinia } from 'pinia';
+    import { createPinia } from 'pinia';
 
     const route = useRoute();
     const nomModele = route.params.nomModele;
@@ -35,6 +35,8 @@ import { createPinia } from 'pinia';
         {title:'Modeles',href:'/models'},
         {title:nomModele}
     ]
+
+    let carousel = ref([]);
 
     request().access();
     onMounted(async () => {
@@ -72,6 +74,7 @@ import { createPinia } from 'pinia';
                 })).then(() => {
                     type_optionview.value = type_options.value[0];
                     DefaultOption();
+                    CarouselInit(motorisationview.value.idMotorisation,selected_options.value[0].idOption)
                     caracteristiqueview.value = caracteristiques.value[0];
                 });
                 request().success();
@@ -85,14 +88,35 @@ import { createPinia } from 'pinia';
         .catch((error) => {
             request().error(error);
             request().debug();
-        });
+        })
     })
+
+    function CarouselInit(idMotorisation,idOption)
+    {
+        carousel.value = [];
+        controller().PhotosController.GetByIdMotorisationANDOption(idMotorisation,idOption)
+        .then((response) => {
+            console.log(response.data)
+            response.data.url.forEach(element => {
+                        carousel.value.push({
+                            title: '',
+                            link: `http://${element}`
+                    })
+                });
+            console.log(carousel.value)
+        })
+        .catch((error) => 
+        {
+            console.log(error)
+        })
+    }
 
     function TotalPrice(){
         let total = 0;
         total += motorisationview.value.prix;
         for (const [key,option] of selected_options.value.entries()) {
-            total += option.coutAdditionnel;
+            if(option.coutAdditionnel)
+                total += option.coutAdditionnel;
         }
         return Intl.NumberFormat('fr-FR', {  style: 'currency', currency: 'EUR' }).format(total);
     }
@@ -115,23 +139,26 @@ import { createPinia } from 'pinia';
     {
         motorisationview.value = motorisations.value[key];
         type_optionview.value = type_options.value[key];
+        CarouselInit(motorisationview.value.idMotorisation,selected_options.value[0].idOption)
         caracteristiqueview.value = caracteristiques.value[key];
     }
 
-    function Test()
+    function Test(msg)
     {
-        let first = document.getElementById("4")
-        let second = document.getElementById("5")
-        console.log(first, second);
+        console.log(msg);
     }
+
 
 </script>
 
 <template>
+    <input @click="Test(Modeles /*.Motorisation.prototype.motorisationToOPM[0]*/)" type="checkbox" />
     <div v-if="request().requestState">
         <BreadCrumbs class="mx-6 mt-3" :_items="BreadCrumbsItems"/>
         <div class="h-[60vh] p-3">
-            <Carousel :hiden="{
+            <Carousel 
+            :_imgs="carousel"
+            :hiden="{
                 title: true,
                 number:true
             }"/>
@@ -174,7 +201,7 @@ import { createPinia } from 'pinia';
                            
                         <div v-if="typeoption.nomType != 'Autres options'">
                             <h1 class="mb-2">{{ typeoption.nomType }} :</h1>
-                            <select v-model="selected_options[key]" class="select select-primary w-full">
+                            <select @change="(key==0)?CarouselInit(motorisationview.idMotorisation,selected_options[0].idOption):Test('Hop')" v-model="selected_options[key]" class="select select-primary w-full">
                                 <option v-for="option in typeoption.optionsNavigation" :value="option ">{{ `${option.libelleOption} ${(option.description)?`(${option.description})`:''}` }}</option>
                             </select>
                         </div>
@@ -187,7 +214,7 @@ import { createPinia } from 'pinia';
                                     <div class="form-control">
                                         <label class="cursor-pointer label">
                                             <span class="label-text">{{ option.libelleOption }}</span> 
-                                            <input type="radio" :value="option" :id="key2" class="toggle toggle-accent"/>
+                                            <input type="checkbox" @change="($event.target.checked)?selected_options[key+key2] = option:selected_options[key+key2] = {};" :value="option" class="toggle toggle-accent"/>
                                         </label>
                                     </div>
                                     <p class="text-sm">{{ option.description }}</p>
@@ -195,8 +222,6 @@ import { createPinia } from 'pinia';
 
                             </div>
                         </div>
-
-                        <button @click="Test()">OK</button>
 
                     </div>
                 </div>
