@@ -1,22 +1,19 @@
 <script setup>
 import { onMounted, ref } from "vue";
 import {request, controller } from '../stores';
+import { compte } from '../stores/compte.js'
 
 import Modeles from '../modeles';
 
 const objects = ref();
-
 request().access();
 onMounted(async () => {
-    controller().ModelesController.GetAll()
+    controller().ComptesController.GetByIdCB(compte().getJsoncompte().idCompte)
     .then((response) => {
         console.log(response.data);
-        objects.value = Modeles.Modele.fromJsonArray(response.data);
-        console.log(objects.value[0].CarouselItem());
-        request().success(response);
     })
     .catch((error) => {
-        request().error(error);
+        console.log(error);
     });
 });
 

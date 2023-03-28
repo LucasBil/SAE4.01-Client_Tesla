@@ -24,7 +24,12 @@
         await controller().ComptesController.GetByEmail(mail.value)
         .then((response) => {
             if(response.data.motDePasse == mdp.value)
+            {
+                // Get Token
+                controller().ComptesController.GetToken(response.data);
+
                 compte().login(response.data);
+            }
             request().success(response);
         })
         .catch((error) => {
