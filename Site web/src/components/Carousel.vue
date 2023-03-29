@@ -25,7 +25,7 @@
             // si _view = null alors pas de redirection
         },
         hiden: {
-            type: Array,
+            type: Object,
             default: {
                 'title': false,
                 'array': false,
