@@ -13,22 +13,23 @@
 
     let mail = ref("");
     let mdp = ref("");
+    let connection;
 
     async function Login()
     {
         if(mail.value == "" || mdp.value == "")
             return;
         
-        console.log(mail.value);
         request().access();
         await controller().ComptesController.GetByEmail(mail.value)
         .then((response) => {
             if(response.data.motDePasse == mdp.value)
             {
-                // Get Token
-                controller().ComptesController.GetToken(response.data);
-
-                compte().login(response.data);
+                connection = response.data;
+                controller().ComptesController.GetToken(response.data)
+                .then((response) => {
+                    compte().login(connection,response.data.token);
+                })
             }
             request().success(response);
         })

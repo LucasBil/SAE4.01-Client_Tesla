@@ -5,15 +5,17 @@ import router from '../router';
 const compte = defineStore( 'compte', {
     state: () => {
         return {
-            compte: ref(null),
-            panier: ref([]),
+            compte: ref(localStorage.compte),
+            token : ref(localStorage.token),
         }
     },
     actions: {
         // Compte
-        login(compte) {
+        login(compte, token) {
+            this.compte = JSON.stringify(compte);
+            this.token = token;
+            localStorage.token = token;
             localStorage.compte = JSON.stringify(compte);
-            this.compte = compte;
             router.push('/');
         },
         editCompte(compte) {
@@ -22,27 +24,29 @@ const compte = defineStore( 'compte', {
             router.go(0);
         },
         logout() {
-            localStorage.removeItem('compte');
             this.compte = null;
+            this.token = null;
+            localStorage.removeItem('token');
+            localStorage.removeItem('compte');
             router.push('/');
         },
         menu() {
             return {
-                'name': (localStorage.compte)?JSON.parse(localStorage.compte).nomCompte : 'Compte',
+                'name': (this.compte)? JSON.parse(this.compte).nomCompte : 'Compte',
                 'links' : [
-                    (localStorage.compte)?{
+                    (this.compte)?{
                         'name': 'Profile',
                         'link': '/profile'
                     }:{'hidden': 'true'},
-                    (!localStorage.compte)?{
+                    (!this.compte)?{
                         'name': 'Connection',
                         'link': '/login'
                     }:{'hidden': 'true'},
-                    (!localStorage.compte)?{
+                    (!this.compte)?{
                         'name': 'Créer un Compte',
                         'link': '/createaccount'
                     }:{'hidden': 'true'},
-                    (localStorage.compte)?{
+                    (this.compte)?{
                         'name': 'Logout',
                         'event' : 'logout'
                     }:{'hidden': 'true'},
@@ -50,33 +54,7 @@ const compte = defineStore( 'compte', {
               }
         },
         getJsoncompte() {
-            let response = JSON.parse(localStorage.compte);
-            return response;
-        },
-
-        // Panier
-        addPanier(produit) {
-            let panier = this.getPanier();
-            if(panier == null) {
-                panier = [];
-            }
-            panier.push(produit);
-            localStorage.panier = JSON.stringify(panier);
-            this.panier = panier;
-        },
-        removePanier(produit) {
-            let panier = this.getPanier();
-            if(panier == null) {
-                panier = [];
-            }
-            panier = panier.filter(function(value, index, arr){
-                return value.id != produit.id;
-            });
-            localStorage.panier = JSON.stringify(panier);
-            this.panier = panier;
-        },
-        getPanier() {
-            let response = JSON.parse(localStorage.panier);
+            let response = JSON.parse(this.compte);
             return response;
         },
     },

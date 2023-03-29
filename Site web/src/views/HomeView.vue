@@ -1,5 +1,5 @@
 <script setup>
-
+  import { compte } from '../stores/compte';
 </script>
 
 <template v-if="status_request">
