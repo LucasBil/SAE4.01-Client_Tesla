@@ -6,7 +6,8 @@ import { request } from './stores'
 import { compte } from './stores/compte.js'
 
 // Composants
-import IconTesla from './components/icons/IconTesla.vue'
+import IconTesla from './components/icons/IconTesla.vue';
+import AlertInfo from './components/AlertInfo.vue';
 import Menu from './components/Menu.vue';
 import FooterView from './components/Footer.vue';
 import WaitingScreen from './components/WaitingScreen.vue';
@@ -45,7 +46,7 @@ let _menu = [
       <label tabindex="0" class="btn btn-ghost btn-circle">
         <div class="indicator">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
-            <span class="badge badge-sm indicator-item">{{ compte().panier.length }}</span>
+            <span class="badge badge-sm indicator-item">0</span>
         </div>
       </label>
     
@@ -70,14 +71,9 @@ let _menu = [
   <main>
     <RouterView />
   </main>
-  <WaitingScreen v-if="!request().requestState && !request().requestError"/>
-  <div v-if="request().requestError" class="toast toast-end">
-    <div class="alert alert-error shadow-lg">
-      <div>
-        <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current flex-shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-        <span>Error {{ request().requestCode }} !</span>
-      </div>
-    </div>
+  <WaitingScreen v-if="!request().requestState"/>
+  <div class="toast toast-end">
+    <AlertInfo @close="request().removeAlert(toast.id)" v-for="toast in request().toastinfo" :id="toast.id" :type="toast.type" :message="toast.message"/>
   </div>
   <FooterView/>
 </template>

@@ -11,17 +11,27 @@
   import InputForm from '../components/InputForm.vue';
 
   let _compte = ref({});
+  let connection = ref();
 
   async function Post()
   {
     request().access();
     await controller().ComptesController.Post(_compte.value)
     .then((response) => {
+      connection = response.data;
         // Get Compte to database
         controller().ComptesController.GetByEmail(_compte.value.email)
         .then((response) => {
-            request().success(response);
-            compte().login(response.data);
+          // Get Token
+          controller().ComptesController.GetToken(response.data)
+          .then((response) => {
+            compte().login(connection, response.data.token);
+          })
+          .catch((error) => {
+            request().error(error);
+            request().debug();
+          });
+          request().success(response);
         })
         .catch((error) => {
           request().error(error);

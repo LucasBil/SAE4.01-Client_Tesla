@@ -80,9 +80,8 @@
                 request().success();
             })
             .catch((error) => {
-                //console.log(error)
-                //request().error(error);
-                //request().debug();
+                request().error(error);
+                request().debug(); // Error de Code
             })
         })
         .catch((error) => {
@@ -96,18 +95,17 @@
         carousel.value = [];
         controller().PhotosController.GetByIdMotorisationANDOption(idMotorisation,idOption)
         .then((response) => {
-            console.log(response.data)
             response.data.url.forEach(element => {
                         carousel.value.push({
                             title: '',
                             link: `http://${element}`
                     })
                 });
-            console.log(carousel.value)
         })
         .catch((error) => 
         {
-            console.log(error)
+            request().error(error);
+            request().debug();
         })
     }
 
@@ -143,16 +141,9 @@
         caracteristiqueview.value = caracteristiques.value[key];
     }
 
-    function Test(msg)
-    {
-        console.log(msg);
-    }
-
-
 </script>
 
 <template>
-    <input @click="Test(Modeles /*.Motorisation.prototype.motorisationToOPM[0]*/)" type="checkbox" />
     <div v-if="request().requestState">
         <BreadCrumbs class="mx-6 mt-3" :_items="BreadCrumbsItems"/>
         <div class="h-[60vh] p-3">
