@@ -2,6 +2,7 @@ import api from '../api'
 import { defineStore } from 'pinia'
 
 const controller = defineStore( 'controller', () => {
+    const AccessoiresController = api.AccessoiresController
     const ModelesController = api.ModelesController;
     const MotorisationsController = api.MotorisationsController;
     const OptionsController = api.OptionsController;
@@ -10,7 +11,7 @@ const controller = defineStore( 'controller', () => {
     const TypeOptionsController = api.TypeOptionsController;
     const ComptesController = api.ComptesController;
     const VehiculeDemonstrationsController = api.VehiculeDemonstrationsController;
-    return { ModelesController, MotorisationsController, OptionsController, CaracteristiquesController, PhotosController, TypeOptionsController, ComptesController, VehiculeDemonstrationsController }}
+    return { AccessoiresController, ModelesController, MotorisationsController, OptionsController, CaracteristiquesController, PhotosController, TypeOptionsController, ComptesController, VehiculeDemonstrationsController }}
 )
 
 const request = defineStore( 'request', {

@@ -1,3 +1,4 @@
+import AccessoiresController from "./AccessoireController";
 import OptionsController from "./OptionsController";
 import MotorisationsController from "./MotorisationsController";
 import ModelesController from "./ModelesController";
@@ -8,6 +9,7 @@ import ComptesController from "./ComptesController";
 import VehiculeDemonstrationsController from "./VehiculeDemonstrationsController";
 
 const api = {
+    AccessoiresController,
     OptionsController,
     MotorisationsController,
     ModelesController,
