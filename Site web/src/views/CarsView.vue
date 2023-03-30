@@ -77,11 +77,11 @@
                     CarouselInit(motorisationview.value.idMotorisation,selected_options.value[0].idOption)
                     caracteristiqueview.value = caracteristiques.value[0];
                 });
-                request().success();
+                request().success(response);
             })
             .catch((error) => {
                 request().error(error);
-                request().debug(); // Error de Code
+                request().debug();
             })
         })
         .catch((error) => {

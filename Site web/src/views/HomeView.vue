@@ -1,7 +1,4 @@
 <script setup>
-import { compte } from '../stores/compte.js'
-
-console.log(compte().token)
 </script>
 
 <template v-if="status_request">
