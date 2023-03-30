@@ -1,7 +1,7 @@
 <script setup>
     import { useRoute, RouterLink, onBeforeRouteUpdate } from 'vue-router';
     import { onMounted, ref } from "vue";
-    
+    import router from '../router';
     
     // Stores
     import { request , controller } from '../stores';
@@ -64,7 +64,7 @@
     <main>
 
         <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 m-6 gap-4">
-            <Card :title="accessoire.nomAccessoire" :resume="accessoire.description" v-for="accessoire in Filtre()"/>
+            <Card @learn-more="router.push(`mersh${$event}`);" :id="accessoire.idAccessoire" :title="accessoire.nomAccessoire" :resume="accessoire.description" v-for="accessoire in Filtre()"/>
         </div>
 
     </main>

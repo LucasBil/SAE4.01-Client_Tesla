@@ -39,6 +39,11 @@ const router = createRouter({
       component: () => import('../views/MershsView.vue')
     },
     {
+      path: '/mersh:idMersh',
+      name: 'mersh',
+      component: () => import('../views/MershView.vue')
+    },
+    {
       path: '/login',
       name: 'login',
       component: () => import('../views/LoginView.vue')
