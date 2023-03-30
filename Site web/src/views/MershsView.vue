@@ -11,9 +11,6 @@
     
     import Card from '../components/Card.vue';
 
-    // Accessoires
-    // import Accessoires from '../accessoires';
-
     let accessoires = ref([]);
     let search = ref("");
 
@@ -63,7 +60,7 @@
 
     <main>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 m-6 gap-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-2 m-6 gap-4">
             <Card @learn-more="router.push(`mersh${$event}`);" :id="accessoire.idAccessoire" :title="accessoire.nomAccessoire" :resume="accessoire.description" v-for="accessoire in Filtre()"/>
         </div>
 
