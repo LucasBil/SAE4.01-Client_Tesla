@@ -1,11 +1,11 @@
 <script setup>
   import { onMounted, ref } from "vue";
-  import router from '../router';
+
   import { sha3_512 } from "js-sha3";
 
   // Stores
   import { request, controller } from '../stores';
-  import { compte } from '../stores/compte.js'
+  import { store_compte } from '../stores/compte.js'
 
   // Composants
   import InputForm from '../components/InputForm.vue';
@@ -26,7 +26,7 @@
           // Get Token
           controller().ComptesController.GetToken(response.data)
           .then((response) => {
-            compte().login(connection, response.data.token);
+            store_compte().login(connection, response.data.token);
           })
           .catch((error) => {
             request().error(error);

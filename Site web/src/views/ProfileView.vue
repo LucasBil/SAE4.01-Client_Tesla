@@ -2,15 +2,14 @@
     import { ref } from 'vue';
     import { sha3_512 } from "js-sha3";
 
-    import { compte } from '../stores/compte.js';
+    import { store_compte } from '../stores/compte.js';
     import { request, controller } from '../stores';
 
     import InputForm from '../components/InputForm.vue';
     import Popup from '../components/Popup.vue';
     
-    let _compte = ref(compte().getJsoncompte());
+    let _compte = ref(store_compte().compte);
     let mdpconfirm = ref(true);
-    console.log(_compte.value);
 
     let popup =ref({
         show: false,
@@ -39,7 +38,7 @@
         request().access();
         await controller().ComptesController.Put(_compte.value.idCompte,_compte.value)
         .then((response) => {
-            compte().editCompte(_compte.value);
+            store_compte().editCompte(_compte.value);
             request().success(response);
         })
         .catch((error) => {
@@ -53,7 +52,7 @@
         request().access();
         await controller().ComptesController.Delete(_compte.value.idCompte)
         .then((response) => {
-            compte().logout();
+            store_compte().logout();
             request().success(response);
         })
         .catch((error) => {
