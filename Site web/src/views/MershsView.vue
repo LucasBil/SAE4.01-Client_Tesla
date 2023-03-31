@@ -56,7 +56,7 @@
 
 
 <template>
-    <input type="checkbox" @click="Test()">
+    <input type="checkbox" @click="Test(accessoires)">
 
     <main>
 
