@@ -41,10 +41,16 @@
 </script>
 
 <template>
-    <h1>{{ Test(accessoire) }}</h1>
+    <input type="button" value="Press it !!!" @click="Test(accessoire)">
     <div class="grid grid-cols-2">
         <div class="flex flex-col h-[60vh] p-3">
             <Carousel 
+            :_imgs="[
+                {
+                    title :'',
+                    link : 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/af/VVS_100th_IMG_0691_%287727464290%29_%28cropped%29.jpg/1280px-VVS_100th_IMG_0691_%287727464290%29_%28cropped%29.jpg'
+                }
+            ]"
             :hiden="{
                 title: true,
                 number:true
