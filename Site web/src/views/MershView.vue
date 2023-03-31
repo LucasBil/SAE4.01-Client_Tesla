@@ -29,8 +29,8 @@
             request().success();
         })
         .catch((error) => {
-            //request().error(error);
-            //request().debug();
+            request().error(error);
+            request().debug();
         })
     })
 

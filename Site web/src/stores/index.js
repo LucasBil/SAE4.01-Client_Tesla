@@ -12,7 +12,9 @@ const controller = defineStore( 'controller', () => {
     const TypeOptionsController = api.TypeOptionsController;
     const ComptesController = api.ComptesController;
     const VehiculeDemonstrationsController = api.VehiculeDemonstrationsController;
-    return { AccessoiresController, ModelesController, MotorisationsController, OptionsController, CaracteristiquesController, PhotosController, TypeOptionsController, ComptesController, VehiculeDemonstrationsController }}
+    const VariantesController = api.VariantesController;
+    return { AccessoiresController, ModelesController, MotorisationsController, OptionsController, CaracteristiquesController, PhotosController, TypeOptionsController, 
+        ComptesController, VehiculeDemonstrationsController, VariantesController }}
 )
 
 const request = defineStore( 'request', {
