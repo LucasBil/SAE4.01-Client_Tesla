@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import { onMounted, ref } from "vue";
+import { useLocalStorage, useStorage } from '@vueuse/core'
 import router from '../router';
 
 const compte = defineStore( 'compte', {
