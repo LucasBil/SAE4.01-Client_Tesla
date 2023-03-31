@@ -6,7 +6,7 @@
 
     // Stores
     import { request, controller } from '../stores';
-    import { compte } from '../stores/compte.js'
+    import { store_compte } from '../stores/compte.js'
 
     // Composants
     import InputForm from '../components/InputForm.vue';
@@ -28,7 +28,7 @@
                 connection = response.data;
                 controller().ComptesController.GetToken(response.data)
                 .then((response) => {
-                    compte().login(connection,response.data.token);
+                    store_compte().login(connection,response.data.token);
                 })
             }
             request().success(response);

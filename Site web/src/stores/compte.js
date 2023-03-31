@@ -1,63 +1,64 @@
 import { defineStore } from 'pinia'
-import { onMounted, ref } from "vue";
-import { useLocalStorage, useStorage } from '@vueuse/core'
+import { useStorage, StorageSerializers } from '@vueuse/core'
 import router from '../router';
 
-const compte = defineStore( 'compte', {
+const store_compte = defineStore( 'store-compte', {
     state: () => {
         return {
-            compte: ref(localStorage.compte),
-            token : ref(localStorage.token),
+            _compte: useStorage('compte', null, localStorage, {serializer: StorageSerializers.object}),
+            _token: useStorage('token', null),
         }
+    },
+    getters: {
+        compte: (state) => state._compte,
+        name: (state) => {
+            if(!state._compte) 
+                return 'Compte';
+            else
+                return state._compte.nomCompte
+        },
+        token: (state) => state._token,
     },
     actions: {
         // Compte
         login(compte, token) {
-            this.compte = JSON.stringify(compte);
-            this.token = token;
-            localStorage.token = token;
-            localStorage.compte = JSON.stringify(compte);
+            console.log(compte);
+            this._compte = compte;
+            this._token = token;
             router.push('/');
         },
         editCompte(compte) {
-            localStorage.compte = JSON.stringify(compte);
-            this.compte = compte;
+            this._compte = compte;
             router.go(0);
         },
         logout() {
-            this.compte = null;
-            this.token = null;
-            localStorage.removeItem('token');
-            localStorage.removeItem('compte');
+            this._compte = null;
+            this._token = null;
             router.push('/');
         },
         menu() {
             return {
-                'name': (this.compte)? JSON.parse(this.compte).nomCompte : 'Compte',
+                'name': this.name,
                 'links' : [
-                    (this.compte)?{
+                    (this._compte)?{
                         'name': 'Profile',
                         'link': '/profile'
                     }:{'hidden': 'true'},
-                    (!this.compte)?{
+                    (!this._compte)?{
                         'name': 'Connection',
                         'link': '/login'
                     }:{'hidden': 'true'},
-                    (!this.compte)?{
+                    (!this._compte)?{
                         'name': 'Créer un Compte',
                         'link': '/createaccount'
                     }:{'hidden': 'true'},
-                    (this.compte)?{
+                    (this._compte)?{
                         'name': 'Logout',
                         'event' : 'logout'
                     }:{'hidden': 'true'},
                 ]
               }
-        },
-        getJsoncompte() {
-            let response = JSON.parse(this.compte);
-            return response;
-        },
+        }
     },
 })
-export { compte }
+export { store_compte }

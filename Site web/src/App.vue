@@ -3,7 +3,7 @@ import { RouterLink, RouterView } from 'vue-router'
 
 // Stores
 import { request } from './stores'
-import { compte } from './stores/compte.js'
+import { store_compte } from './stores/compte.js'
 import { store_panier } from './stores/panier.js'
 
 // Composants
@@ -53,14 +53,14 @@ let _menu = [
     
       <!-- Dropdown menu Connection -->
       <div class="dropdown dropdown-end">
-        <label tabindex="0" class="btn btn-ghost">{{ compte().menu().name }}</label>
+        <label tabindex="0" class="btn btn-ghost">{{ store_compte().menu().name }}</label>
           <ul tabindex="0" class="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52">
-              <li v-for="item in compte().menu().links">
+              <li v-for="item in store_compte().menu().links">
                   <RouterLink v-if="item.link" :to="{path:item.link}" class="justify-between">
                       {{ item.name }}
                       <span v-if="item.badge" class="badge">{{ item.badge }}</span>
                   </RouterLink>
-                  <span @click="(item.event == 'logout')?compte().logout():null" v-else class="justify-between" :class="(item.hidden)?'hidden':''">
+                  <span @click="(item.event == 'logout')?store_compte().logout():null" v-else class="justify-between" :class="(item.hidden)?'hidden':''">
                       {{ item.name }}
                       <span v-if="item.badge" class="badge">{{ item.badge }}</span>
                   </span>
