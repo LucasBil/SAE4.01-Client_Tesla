@@ -5,6 +5,7 @@
     // Stores
     import { request , controller } from '../stores';
     import saves from '../stores/saves';
+    import { panier } from '../stores/panier';
     import pdf from '../stores/pdf';
 
     // Modeles
@@ -222,7 +223,7 @@
                 <RouterLink @click="pdf().save(motorisationview,selected_options,TotalPrice())" class="btn w-[75%] btn-outline btn-primary" :to="{ name:'pdf'}">
                     Générer un résumé en PDF
                 </RouterLink>
-                <button class="btn w-[75%] btn-warning">Commander</button>
+                <button @click="panier().addPanier({ idMotorisation: motorisationview})" class="btn w-[75%] btn-warning">Commander</button>
             </div>
         </div>
     </div>
