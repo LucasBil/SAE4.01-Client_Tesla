@@ -5,7 +5,7 @@
     // Stores
     import { request , controller } from '../stores';
     import saves from '../stores/saves';
-    import { panier } from '../stores/panier';
+    import { store_panier } from '../stores/panier';
     import pdf from '../stores/pdf';
 
     // Modeles
@@ -14,7 +14,6 @@
     // Composants
     import Carousel from '../components/Carousel.vue';
     import BreadCrumbs from '../components/Breadcrumbs.vue';
-    import { createPinia } from 'pinia';
 
     const route = useRoute();
     const nomModele = route.params.nomModele;
@@ -223,7 +222,14 @@
                 <RouterLink @click="pdf().save(motorisationview,selected_options,TotalPrice())" class="btn w-[75%] btn-outline btn-primary" :to="{ name:'pdf'}">
                     Générer un résumé en PDF
                 </RouterLink>
-                <button @click="panier().addPanier({ idMotorisation: motorisationview})" class="btn w-[75%] btn-warning">Commander</button>
+                <button @click="store_panier().addPanier({
+                    article : {
+                        motorisation: motorisationview,
+                        options: selected_options,
+                    },
+                    quantite : 1,
+                    prix: TotalPrice()
+                })" class="btn w-[75%] btn-warning">Commander</button>
             </div>
         </div>
     </div>

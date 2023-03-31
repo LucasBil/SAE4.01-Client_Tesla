@@ -1,36 +1,30 @@
 import { defineStore } from 'pinia'
-import { ref } from "vue";
+import { useLocalStorage, useStorage } from '@vueuse/core'
 
-const panier = defineStore( 'panier', {
+const store_panier = defineStore( 'store-panier', {
     state: () => {
         return {
-            panier: ref(localStorage.panier)
+            _panier: useStorage('panier', []),
+        }
+    },
+    getters: {
+        panier: (state) => state._panier,
+        nbArticle: (state) => state._panier.length,
+        total: (state) => {
+            let total = 0;
+            state._panier.forEach(article => {
+                total += article.prix * article.quantite;
+            });
+            return total;
         }
     },
     actions: {
-        // Compte
         addPanier(article) {
-            if(!this.panier)
-            {
-                this.panier = JSON.stringify([]);
-                localStorage.panier = JSON.stringify([]);
-            }
-            console.log(JSON.parse(this.panier));
-            this.panier = JSON.stringify(JSON.parse(this.panier).push(JSON.stringify(article)));
-            localStorage.panier = JSON.stringify(JSON.parse(localStorage.panier).push(JSON.stringify(article)));
+            this._panier.push(article);
         },
-        addMultiplePanier(article, number) {
-            for ( i in number) {
-                this.panier.push(JSON.stringify(article));
-                localStorage.panier.push(JSON.stringify(article));
-            }
-        },
-        getJsonPanier() {
-            if(!this.panier) 
-                return [];
-            else
-                return JSON.parse(this.panier);
-        },
+        removePanier(article) {
+            this._panier.splice(this._panier.indexOf(article), 1);
+        }
     },
 })
-export { panier }
+export { store_panier }
