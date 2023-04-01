@@ -38,7 +38,7 @@
         <figure>
             <img class="object-cover h-full" :src="`http://${_img}`" alt="Album"/>
         </figure>
-        <div class="card-body">
+        <div class="card-body w-[100%]">
             <h2 class="card-title">{{ title }}</h2>
             <p class="block textarea-info overflow-y-auto text-ellipsis h-24 leading-6">{{ resume }}</p>
             <div class="card-actions justify-end">

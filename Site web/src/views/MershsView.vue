@@ -12,6 +12,7 @@
     import Card from '../components/Card.vue';
 
     let accessoires = ref([]);
+    let variantes = ref([]);
     let search = ref("");
 
     request().access();
@@ -26,6 +27,7 @@
             //request().error(error);
             //request().debug();
         })
+
     })
 
     function Filtre() {

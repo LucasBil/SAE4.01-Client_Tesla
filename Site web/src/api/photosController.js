@@ -14,6 +14,10 @@ class PhotosController extends ControllerManager {
     GetByIdMotorisationANDOption(id_motorisation, id_option) {
         return axios.get(`${ControllerManager.baseURL}/${this.name}/ByIdMotoAndIdOpt/${id_motorisation}/${id_option}`);
     }
+
+    GetByIdVariantes(id_variantes) {
+        return axios.get(`${ControllerManager.baseURL}/${this.name}/ByIdVariante/${id_variantes}`)
+    }
 }
 
 export default new PhotosController();
