@@ -12,7 +12,8 @@
     import Card from '../components/Card.vue';
 
     let accessoires = ref([]);
-    let variantes = ref([]);
+    let variantes = ref ([]);
+    let photos = ref([]);
     let search = ref("");
 
     request().access();
@@ -21,14 +22,34 @@
         controller().AccessoiresController.GetAll()
         .then((response) => {
             accessoires.value = response.data;
-            request().success();
+            Promise.all(accessoires.value.map(v => {
+
+                if (v.idAccessoire < 11 || v.idAccessoire > 19) {
+                    const promisePH = controller().PhotosController.GetByIdAccessoire(v.idAccessoire)
+                    .then((response) => {
+                        console.log(response.data)
+                        photos.value.push(response.data) 
+                    })
+                    .catch((error) => {
+                        request().error(error);
+                        request().debug();
+                    });
+
+                    return promisePH;
+                }
+
+            }))
+            request().success(response);
+                
         })
         .catch((error) => {
             //request().error(error);
             //request().debug();
+            console.log(error)
         })
-
     })
+    
+
 
     function Filtre() {
         let filtre = []
@@ -58,12 +79,12 @@
 
 
 <template>
-    <input type="checkbox" @click="Test(accessoires)">
+    <input type="checkbox" @click="Test(photos)">
 
     <main>
 
         <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-2 m-6 gap-4">
-            <Card @learn-more="router.push(`mersh${$event}`);" :id="accessoire.idAccessoire" :title="accessoire.nomAccessoire" :resume="accessoire.description" v-for="accessoire in Filtre()"/>
+            <Card @click="Test(photos[accessoire.idAccessoire -1].url)" @learn-more="router.push(`mersh${$event}`);" :id="accessoire.idAccessoire" :title="accessoire.nomAccessoire" :resume="accessoire.description" v-for="accessoire in Filtre()"/>
         </div>
 
     </main>

@@ -20,6 +20,7 @@
     request().access();
     onMounted(async() =>{
         // Get accessoire
+        
         controller().AccessoiresController.GetById(idMersh)
         .then((response) => {
             accessoire.value = response.data;
