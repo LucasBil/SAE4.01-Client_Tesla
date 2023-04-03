@@ -1,12 +1,18 @@
-import { describe, it, expect, assert } from 'vitest';
+import { describe, it, expect, assert, beforeEach, afterEach } from 'vitest';
 import { vi } from 'vitest'
 import ComptesController from "@/api/ComptesController";
 import { ref } from "vue";
-
+import { shallowMount} from '@vue/test-utils';
+import axios from 'axios';
+import MockAdapter from 'axios-mock-adapter';
+import { data } from 'autoprefixer';
 
 
 describe('GetAllComptes', () => {
-  it('GetAllComptesOK', async () => {
+    
+
+    
+    it('GetAllComptesOK', async () => {
     let comptes;
 
     let comptesToCompare = [
@@ -94,7 +100,7 @@ describe('GetAllComptes', () => {
             console.log(comptesToCompare)
 
             expect(comptes).toStrictEqual(comptesToCompare);
-    });
+      });
 
     it('GetByIdCompteOK', async () => {
         let compte;
@@ -104,7 +110,7 @@ describe('GetAllComptes', () => {
                 "idCompte": 89,
                 "idDepartement": null,
                 "email": 'lucasbill318@icloud.com',
-                "typeCompte": 'personnel',
+                "typeCompte": 'Personnel',
                 "nomCompte": 'Lucas',
                 "prenomCompte": 'Billy',
                 "motDePasse": 'e8ec37bfe4e818cc1bb10d1564e1ed7666f75251649ed8606f910306e8b17e00148187bd8ccaf6d683069b550247aa52dd7e9d5460e408df11db9109dafdd087',
@@ -128,6 +134,10 @@ describe('GetAllComptes', () => {
                 .then((response) => {
                     compte = response.data;
                 })
+                .catch(error => {
+                    console.log(error)
+                })
+
                 
     
                 console.log(compte)
@@ -135,4 +145,41 @@ describe('GetAllComptes', () => {
     
                 expect(compte).toStrictEqual(compteToCompare);
         });
+
+    it('PostCompteOK', async () => {
+
+        const mock = new MockAdapter(axios);
+
+        // mock.onGet('https://api-tesla-v2.azurewebsites.net/api/stocks').reply(200, {stocks : 
+        // [{
+        //     "idStock":1,
+        //     "idPays":1,
+        //     "nomStock":"Paris",
+        //     "numRue":55,
+        //     "nomRue":"Rue du Faubourg Saint-Honoré",
+        //     "ville":"Paris",
+        //     "codePostal":"75008",
+        //     "stockAccessoiresNavigation":null,
+        //     "paysNavigation":null
+        // }]}
+        // );
+
+        mock.onPost('https://api-tesla-v2.azurewebsites.net/api/comptes', 
+        {
+            "email":        "mock@icloud.com",
+            "typecompte":   "Personnel",
+            "prenomcompte": "Mocky",
+            "nomcompte":    "MacMock",
+            "motdepasse":   "e8ec37bfe4e818cc1bb10d1564e1ed7666f75251649ed8606f910306e8b17e00148187bd8ccaf6d683069b550247aa52dd7e9d5460e408df11db9109dafdd087"  
+        }).reply(204, {reply: 
+        [{
+            "email":        "mock@icloud.com",
+            "typecompte":   "Personnel",
+            "prenomcompte": "Mocky",
+            "nomcompte":    "MacMock",
+            "motdepasse":   "e8ec37bfe4e818cc1bb10d1564e1ed7666f75251649ed8606f910306e8b17e00148187bd8ccaf6d683069b550247aa52dd7e9d5460e408df11db9109dafdd087"  
+        }]}
+        );
+
+    });
 });
