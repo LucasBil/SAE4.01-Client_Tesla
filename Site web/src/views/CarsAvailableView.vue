@@ -4,26 +4,45 @@
     import saves from '../stores/saves.js';
     import IconFilter from '../components/icons/IconFilter.vue';
     import Card from '../components/Card.vue';
-
+    
+    let maxPrice = ref(0);
+    let priceLimits = ref([1000000, 0]);
     let motorisations = ref();
-
-    if (saves().findValue('MotorisationDispos')){
-        motorisations.value = saves().findValue('MotorisationDispos').value
-    }
-    else
-    {
-        request().access();
-        onMounted(async () => {
-            controller().VehiculeDemonstrationsController.GetAll()
-            .then((response) => {
-                motorisations.value = response.data;
-                saves().save('MotorisationDispos', motorisations.value);
-                request().success(response);
-            })
-            .catch((error) => {
-                request().error(error);
-            });
+    let options = ref([]);
+    let filters = ref([]);
+    
+    request().access();
+    onMounted(async () => {
+        controller().VehiculeDemonstrationsController.GetAll()
+        .then((response) => {
+            motorisations.value = response.data;
+            for (let moto of motorisations.value) {
+                if (moto.motosVehiculeNavigation.prix < priceLimits.value[0]){
+                    priceLimits.value[0] = moto.motosVehiculeNavigation.prix;
+                }
+                if (moto.motosVehiculeNavigation.prix > priceLimits.value[1]){
+                    priceLimits.value[1] = moto.motosVehiculeNavigation.prix;
+                }
+            }
+            maxPrice.value = priceLimits.value[1]
+            request().success(response);
+        })
+        .catch((error) => {
+            request().error(error);
         });
+        controller().TypeOptionsController.GetAll()
+        .then((response) => {
+            options.value = response.data;
+            request().success(response);
+        })
+        .catch((error) => {
+            request().error(error);
+        });
+    });
+    
+    function Test(msg)
+    {
+        console.log(msg);
     }
 </script>
 
@@ -73,26 +92,27 @@
                 <div class="divider"></div>
                 <h1 class="font-bold mb-3">Couleur Intérieure :</h1>
                 <li>
-                    <select class="select select-bordered w-full p-2" name="" id="">
+                    <select v-if="options.length != 0" class="select select-bordered w-full p-2" name="" id="">
                         <option value="" selected>Aucune</option>
                         <!-- v-for Color In -->
-                        <option v-for="i in 10" :value="i">{{ i }}</option>
+                        <option v-for="colorIn in options[1].optionsNavigation" :value="colorIn.idOption">{{ colorIn.libelleOption }}</option>
                     </select>
                 </li>
                 <div class="divider"></div>
                 <h1 class="font-bold mb-3">Couleur Extérieure :</h1>
+                <button @click="Test(options)">Test</button>
                 <li>
-                    <select class="select select-bordered w-full p-2" name="" id="">
+                    <select v-if="options.length != 0" class="select select-bordered w-full p-2" name="" id="">
                         <option value="" selected>Aucune</option>
                         <!-- v-for Color Out -->
-                        <option v-for="i in 10" :value="i">{{ i }}</option>
+                        <option v-for="colorOut in options[0].optionsNavigation" :value="colorOut.idOption">{{ colorOut.libelleOption }}</option>
                     </select>
                 </li>
 
                 <div class="divider"></div>
-                <h1 class="font-bold mb-3">Prix :</h1>
-                <input type="number" min="0" max="100" placeholder="40" class="input input-bordered w-full mb-2" />
-                <input type="range" min="0" max="100" value="40" class="range" />
+                <h1 class="font-bold mb-3">Prix max :</h1>
+                <input type="number" :min="priceLimits[0]" :max="priceLimits[1]" v-model="maxPrice" placeholder="75000" class="input input-bordered w-full mb-2" />
+                <input type="range" :min="priceLimits[0]" :max="priceLimits[1]" v-model="maxPrice" class="range" />
             </ul>
         </div>
     </div>
