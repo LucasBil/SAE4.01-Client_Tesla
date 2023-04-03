@@ -113,8 +113,11 @@
         let total = 0;
         total += motorisationview.value.prix;
         for (const [key,option] of selected_options.value.entries()) {
-            if(option.coutAdditionnel)
-                total += option.coutAdditionnel;
+            if(option)
+            {
+                if(option.coutAdditionnel)
+                    total += option.coutAdditionnel;
+            }
         }
         return total;
     }
@@ -154,7 +157,7 @@
                 number:true
             }"/>
         </div>
-        <div class="flex m-3 gap-3 justify-center">
+        <div class="flex m-3 gap-3 justify-center flex-wrap">
             <button @click="SwitchMotorisation(key)" v-for="motorisation,key in motorisations" class="btn">
                 {{ motorisation.nomMotorisation }}
             </button>

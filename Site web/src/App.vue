@@ -72,11 +72,11 @@ let view_panier = ref(false);
         </div>
       </div>
   </header>
-  <main class="relative min-h-screen">
+  <main class="relative">
     <RouterView :class="(view_panier)?'hidden':''" />
 
     <!-- Panier -->
-    <div v-if="view_panier" class="min-h-screen w-full flex flex-col gap-2 items-center bg-base-100 absolute top-0">
+    <div v-if="view_panier" class="min-h-full w-full flex flex-col gap-2 items-center bg-base-100 absolute top-0">
       <button @click="view_panier = false" class="absolute right-2">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
       </button>
