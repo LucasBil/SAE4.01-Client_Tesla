@@ -15,7 +15,7 @@ const store_panier = defineStore( 'store-panier', {
             state._panier.forEach(article => {
                 total += article.prix * article.quantite;
             });
-            return total;
+            return Intl.NumberFormat('fr-FR', {  style: 'currency', currency: 'EUR' }).format(total);
         }
     },
     actions: {

@@ -116,7 +116,7 @@
             if(option.coutAdditionnel)
                 total += option.coutAdditionnel;
         }
-        return Intl.NumberFormat('fr-FR', {  style: 'currency', currency: 'EUR' }).format(total);
+        return total;
     }
 
     function DefaultOption()
@@ -185,14 +185,14 @@
                 </div>
             </div>
             <div class="border-2 p-6 shadow-xl rounded-xl">
-                <h1 class="text-3xl font-bold">Prix : <span class="text-accent"> {{ TotalPrice() }}</span></h1>
+                <h1 class="text-3xl font-bold">Prix : <span class="text-accent"> {{ Intl.NumberFormat('fr-FR', {  style: 'currency', currency: 'EUR' }).format(TotalPrice()) }}</span></h1>
                 
                 <div class="flex flex-col my-2 gap-3">
                     <div v-for="typeoption,key in type_optionview" class="my-2">
                            
                         <div v-if="typeoption.nomType != 'Autres options'">
                             <h1 class="mb-2">{{ typeoption.nomType }} :</h1>
-                            <select @change="(key==0)?CarouselInit(motorisationview.idMotorisation,selected_options[0].idOption):Test('Hop')" v-model="selected_options[key]" class="select select-primary w-full">
+                            <select @change="(key==0)?CarouselInit(motorisationview.idMotorisation,selected_options[0].idOption):''" v-model="selected_options[key]" class="select select-primary w-full">
                                 <option v-for="option in typeoption.optionsNavigation" :value="option ">{{ `${option.libelleOption} ${(option.description)?`(${option.description})`:''}` }}</option>
                             </select>
                         </div>
