@@ -36,7 +36,7 @@
     async function Put()
     {   
         request().access();
-        await controller().ComptesController.Put(_compte.value.idCompte,_compte.value)
+        await controller().ComptesController.Put(_compte.value.idCompte,_compte.value, store_compte().token)
         .then((response) => {
             store_compte().editCompte(_compte.value);
             request().success(response);
@@ -50,7 +50,7 @@
     async function Delete()
     {
         request().access();
-        await controller().ComptesController.Delete(_compte.value.idCompte)
+        await controller().ComptesController.Delete(_compte.value.idCompte, store_compte().token)
         .then((response) => {
             store_compte().logout();
             request().success(response);
