@@ -5,6 +5,7 @@
     // Stores
     import { request , controller } from '../stores';
     import saves from '../stores/saves';
+    import { store_panier } from '../stores/panier';
     import pdf from '../stores/pdf';
 
     // Modeles
@@ -13,7 +14,6 @@
     // Composants
     import Carousel from '../components/Carousel.vue';
     import BreadCrumbs from '../components/Breadcrumbs.vue';
-    import { createPinia } from 'pinia';
 
     const route = useRoute();
     const nomModele = route.params.nomModele;
@@ -77,12 +77,11 @@
                     CarouselInit(motorisationview.value.idMotorisation,selected_options.value[0].idOption)
                     caracteristiqueview.value = caracteristiques.value[0];
                 });
-                request().success();
+                request().success(response);
             })
             .catch((error) => {
-                //console.log(error)
-                //request().error(error);
-                //request().debug();
+                request().error(error);
+                request().debug();
             })
         })
         .catch((error) => {
@@ -96,18 +95,17 @@
         carousel.value = [];
         controller().PhotosController.GetByIdMotorisationANDOption(idMotorisation,idOption)
         .then((response) => {
-            console.log(response.data)
             response.data.url.forEach(element => {
                         carousel.value.push({
                             title: '',
                             link: `http://${element}`
                     })
                 });
-            console.log(carousel.value)
         })
         .catch((error) => 
         {
-            console.log(error)
+            request().error(error);
+            request().debug();
         })
     }
 
@@ -143,16 +141,9 @@
         caracteristiqueview.value = caracteristiques.value[key];
     }
 
-    function Test(msg)
-    {
-        console.log(msg);
-    }
-
-
 </script>
 
 <template>
-    <input @click="Test(Modeles /*.Motorisation.prototype.motorisationToOPM[0]*/)" type="checkbox" />
     <div v-if="request().requestState">
         <BreadCrumbs class="mx-6 mt-3" :_items="BreadCrumbsItems"/>
         <div class="h-[60vh] p-3">
@@ -231,7 +222,14 @@
                 <RouterLink @click="pdf().save(motorisationview,selected_options,TotalPrice())" class="btn w-[75%] btn-outline btn-primary" :to="{ name:'pdf'}">
                     Générer un résumé en PDF
                 </RouterLink>
-                <button class="btn w-[75%] btn-warning">Commander</button>
+                <button @click="store_panier().addPanier({
+                    article : {
+                        motorisation: motorisationview,
+                        options: selected_options,
+                    },
+                    quantite : 1,
+                    prix: TotalPrice()
+                })" class="btn w-[75%] btn-warning">Commander</button>
             </div>
         </div>
     </div>

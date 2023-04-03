@@ -1,27 +1,38 @@
 <script setup>
   import { onMounted, ref } from "vue";
-  import router from '../router';
+
   import { sha3_512 } from "js-sha3";
 
   // Stores
   import { request, controller } from '../stores';
-  import { compte } from '../stores/compte.js'
+  import { store_compte } from '../stores/compte.js'
 
   // Composants
   import InputForm from '../components/InputForm.vue';
 
   let _compte = ref({});
+  let mdpconfirm = ref(false);
+  let connection = ref();
 
   async function Post()
   {
     request().access();
     await controller().ComptesController.Post(_compte.value)
     .then((response) => {
+      connection = response.data;
         // Get Compte to database
         controller().ComptesController.GetByEmail(_compte.value.email)
         .then((response) => {
-            request().success(response);
-            compte().login(response.data);
+          // Get Token
+          controller().ComptesController.GetToken(response.data)
+          .then((response) => {
+            store_compte().login(connection, response.data.token);
+          })
+          .catch((error) => {
+            request().error(error);
+            request().debug();
+          });
+          request().success(response);
         })
         .catch((error) => {
           request().error(error);
@@ -35,75 +46,25 @@
   }
 
   //function
-  function ProAccount(event)
-  {
-    if(event.target.classList.contains("select-error")) {
-      event.target.classList.remove("select-error","animate-pulse");
-    }
-    event.target.classList.add("select-success");
-    if( event.target.value == 'proffessionnel')
-    {
-      document.querySelectorAll(".pro").forEach(item => {
-        item.classList.remove("hidden");
-      })
-    }
-    else
-    {
-      document.querySelectorAll(".pro").forEach(item => {
-        item.classList.add("hidden");
-      })
-    }
-  }
-
-  function hiddeMessageBox(idmsg) {
-    document.getElementById(idmsg).classList.add("hidden");
-  }
-
-  function SamePwd(event)
-  {
-    let pwd = document.querySelectorAll("input[type='password']");
-    if(pwd[0].value == pwd[1].value)
-    {
-      if(pwd[0].classList.contains("input-error")) {
-        pwd[0].classList.remove("input-error","animate-pulse");
-      }
-      pwd[0].classList.add("input-success");
-      if(pwd[1].classList.contains("input-error")) {
-        pwd[1].classList.remove("input-error","animate-pulse");
-      }
-      pwd[1].classList.add("input-success");
-      pwd[1].setCustomValidity('');
-    }
-    else
-    {
-      if(pwd[0].classList.contains("input-success")) {
-        pwd[0].classList.remove("input-success");
-      }
-      pwd[0].classList.add("input-error","animate-pulse");
-      if(pwd[1].classList.contains("input-success")) {
-        pwd[1].classList.remove("input-success");
-      }
-      pwd[1].classList.add("input-error","animate-pulse");
-      pwd[1].setCustomValidity("Mot de Passe non identique");
-    }
-  }
-
   function formValidator(){
     let inputs = document.querySelectorAll("input");
-    let select = document.querySelector("select");
     let error = false;
+
+
+    // Detect Error Form
     inputs.forEach(input => {
       if(!input.checkValidity()) {
-        input.classList.add("input-error","animate-pulse");
         error = true;
       }
     });
-    if(select.value == "Type de Compte") {
-      select.classList.add("select-error","animate-pulse");
-      error = true;
+
+    if(_compte.value.typeCompte == "proffessionnel") {
+      if(!_compte.value.nomEntreprise || !_compte.value.numTVA || _compte.value.nomEntreprise == "" || _compte.value.numTVA == "")
+        error = true;
     }
+
     if(error) {
-      document.getElementById("msg_error").classList.remove("hidden");
+      request().addAlert("alert-error","Erreur ! Veuillez remplir correctement les champs obligatoires");
     }
     else
     {
@@ -123,7 +84,8 @@
         <div class="flex flex-col gap-3">
           <div class="flex flex-col gap-1">
             <h1>Type de Compte : <span class="text-error">*</span></h1>
-            <select v-model="_compte.typeCompte" @change="ProAccount($event)" id="s_typCompt" class="select select-bordered w-full" required>
+            <select @change="_compte.typeCompte = $event.target.value" :class="(_compte.typeCompte)?'select-success':'select-error animate-pulse'" id="s_typCompt" class="select select-bordered w-full" required>
+              <option selected disabled>Type de Compte</option>
               <option value="personnel">Personnel</option>
               <option value="proffessionnel">Proffessionel</option>
             </select>
@@ -153,7 +115,7 @@
           </div>
           <div class="flex flex-col gap-1">
             <h1>Confirmation mot de passe : <span class="text-error">*</span></h1>
-            <InputForm @change="SamePwd($event)" :_input="{type:'password',pattern:'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*_-]).{8,}$',placeholder:'************',required:true}" />
+            <InputForm @emit-value="mdpconfirm = (sha3_512($event) == _compte.motDePasse);" :class="(_compte.motDePasse)?(mdpconfirm)?'input-success':'input-error animate-pulse':''" :_input="{type:'password',pattern:'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*_-]).{8,}$',placeholder:'************',required:true}" />
           </div>
         </div>
       </div>
@@ -185,13 +147,13 @@
   
       <!-- Compte Pro -->
   
-      <div class="divider hidden mx-6 md:col-span-3 pro"></div> 
+      <div v-if="(_compte.typeCompte == 'proffessionnel')" class="divider mx-6 md:col-span-3 pro"></div> 
   
-      <div class="px-6 md:p-6 hidden pro">
+      <div v-if="(_compte.typeCompte == 'proffessionnel')" class="px-6 md:p-6 pro">
         <h1 class="text-2xl font-bold">Compte Proffessionnel</h1>
         <p class="text-gray-500 py-3">Ces informations ne sont pas nécéssaire pour la création d'un compte. De plus seul les comptes proffessionnel peuvent remplir ces données</p>
       </div>
-      <div class="hidden col-span-2 m-3 p-6 rounded-xl shadow-xl  pro">
+      <div v-if="(_compte.typeCompte == 'proffessionnel')" class="col-span-2 m-3 p-6 rounded-xl shadow-xl  pro">
         <div class="flex flex-col gap-3">
           <div class="flex flex-col gap-1">
             <h1>Nom Entreprise : <span class="text-error">*</span></h1>
@@ -210,13 +172,6 @@
       
     </div>
   
-    <!-- Error Message -->
-    <div id="msg_error" class="fixed hidden w-[75vw] right-0 bottom-[5vh] alert alert-error shadow-lg">
-      <div>
-        <svg @click="hiddeMessageBox('msg_error')" xmlns="http://www.w3.org/2000/svg" class="stroke-current flex-shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-        <span>Erreur ! Un des champs de saisie est invalide ou incomplet.</span>
-      </div>
-    </div>
   </div>
 
 </template>

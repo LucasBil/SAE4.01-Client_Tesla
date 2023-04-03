@@ -2,14 +2,14 @@
     import { ref } from 'vue';
     import { sha3_512 } from "js-sha3";
 
-    import { compte } from '../stores/compte.js';
+    import { store_compte } from '../stores/compte.js';
     import { request, controller } from '../stores';
 
     import InputForm from '../components/InputForm.vue';
     import Popup from '../components/Popup.vue';
     
-    let _compte = ref(compte().getJsoncompte());
-    console.log(_compte.value);
+    let _compte = ref(store_compte().compte);
+    let mdpconfirm = ref(true);
 
     let popup =ref({
         show: false,
@@ -34,11 +34,11 @@
     }
 
     async function Put()
-    {
+    {   
         request().access();
-        await controller().ComptesController.Put(_compte.value.idCompte,_compte.value)
+        await controller().ComptesController.Put(_compte.value.idCompte,_compte.value, store_compte().token)
         .then((response) => {
-            compte().editCompte(_compte.value);
+            store_compte().editCompte(_compte.value);
             request().success(response);
         })
         .catch((error) => {
@@ -50,9 +50,9 @@
     async function Delete()
     {
         request().access();
-        await controller().ComptesController.Delete(_compte.value.idCompte)
+        await controller().ComptesController.Delete(_compte.value.idCompte, store_compte().token)
         .then((response) => {
-            compte().logout();
+            store_compte().logout();
             request().success(response);
         })
         .catch((error) => {
@@ -61,33 +61,27 @@
         });
     }
 
-    // PWD
-    function SamePwd(event)
-    {
-        let pwd = document.querySelectorAll("input[type='password']");
-        if(pwd[0].value == pwd[1].value)
-        {
-        if(pwd[0].classList.contains("input-error")) {
-            pwd[0].classList.remove("input-error","animate-pulse");
+    function formValidator(){
+        let inputs = document.querySelectorAll("input");
+        let error = !mdpconfirm;
+
+        // Detect Error Form
+        inputs.forEach(input => {
+        if(!input.checkValidity()) {
+            error = true;
         }
-        pwd[0].classList.add("input-success");
-        if(pwd[1].classList.contains("input-error")) {
-            pwd[1].classList.remove("input-error","animate-pulse");
+        });
+
+        if(_compte.value.typeCompte == "proffessionnel") {
+            if(!_compte.value.nomEntreprise || !_compte.value.numTVA || _compte.value.nomEntreprise == "" || _compte.value.numTVA == "")
+                error = true;
         }
-        pwd[1].classList.add("input-success");
-        pwd[1].setCustomValidity('');
+
+        if(error) {
+            request().addAlert("alert-error","Erreur ! Veuillez remplir correctement les champs obligatoires");
         }
-        else
-        {
-        if(pwd[0].classList.contains("input-success")) {
-            pwd[0].classList.remove("input-success");
-        }
-        pwd[0].classList.add("input-error","animate-pulse");
-        if(pwd[1].classList.contains("input-success")) {
-            pwd[1].classList.remove("input-success");
-        }
-        pwd[1].classList.add("input-error","animate-pulse");
-        pwd[1].setCustomValidity("Mot de Passe non identique");
+        else{
+            Put();
         }
     }
 </script>
@@ -138,7 +132,7 @@
             </div>
             <div class="flex flex-col gap-1">
                 <h1>Confirmation mot de passe :</h1>
-                <InputForm @change="SamePwd($event)" :_input="{type:'password',pattern:'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*_-]).{8,}$',placeholder:'************'}" />
+                <InputForm @emit-value="mdpconfirm = (sha3_512($event) == _compte.motDePasse);" :class="(_compte.motDePasse)?(mdpconfirm)?'input-success':'input-error animate-pulse':''" :_input="{type:'password',pattern:'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*_-]).{8,}$',placeholder:'************'}" />
             </div>
             <div class="flex flex-col gap-1">
                 <h1>Adresse :</h1>
@@ -155,7 +149,7 @@
             </div>
             <div class="divider mx-[40%]"></div>
             <!-- Compte Pro -->
-            <div v-if="_compte.typeCompte == 'professionnel'" class="flex flex-col gap-3">
+            <div v-if="_compte.typeCompte == 'proffessionnel'" class="flex flex-col gap-3">
                 <div class="flex flex-col gap-1">
                     <h1>Nom Entreprise :</h1>
                     <InputForm @emit-value="_compte.nomEntreprise = $event" :_input="{type:'text',placeholder:`${ _compte.nomEntreprise }`}" />
@@ -181,6 +175,6 @@
         </div>
     
         <!-- Popup -->
-        <Popup :show="popup.show" @confirm="(popup.title == 'Modification')?Put():Delete()" @close="popup.show = false" :title="popup.title" :description="popup.description" :confirm="popup.confirm"/>
+        <Popup :show="popup.show" @confirm="(popup.title == 'Modification')?formValidator():Delete()" @close="popup.show = false" :title="popup.title" :description="popup.description" :confirm="popup.confirm"/>
     </div>
 </template>

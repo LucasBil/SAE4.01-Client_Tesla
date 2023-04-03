@@ -1,3 +1,4 @@
+import AccessoiresController from "./AccessoireController";
 import OptionsController from "./OptionsController";
 import MotorisationsController from "./MotorisationsController";
 import ModelesController from "./ModelesController";
@@ -6,8 +7,10 @@ import PhotosController from "./PhotosController";
 import TypeOptionsController from "./typeOptionsController";
 import ComptesController from "./ComptesController";
 import VehiculeDemonstrationsController from "./VehiculeDemonstrationsController";
+import VariantesController from "./VariantesController";
 
 const api = {
+    AccessoiresController,
     OptionsController,
     MotorisationsController,
     ModelesController,
@@ -15,7 +18,8 @@ const api = {
     PhotosController,
     TypeOptionsController,
     ComptesController,
-    VehiculeDemonstrationsController
+    VehiculeDemonstrationsController,
+    VariantesController
 };
 
 export default api;

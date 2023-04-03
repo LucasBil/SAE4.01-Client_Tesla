@@ -1,5 +1,9 @@
 <script setup>
     defineProps({
+        id: {
+            type: Number,
+            required: true,
+        },
         title: {
             type: String,
             required: true,
@@ -12,8 +16,7 @@
         },
         _button: {
             type: String,
-            required: true,
-            default: 'Learn more'
+            default: 'En Savoir Plus'
         },
         _img: {
             type: String,
@@ -24,6 +27,9 @@
             type: String
         }
     })
+
+    const emit = defineEmits(['learn-more']);
+
 </script>
 
 <template>
@@ -32,11 +38,11 @@
         <figure>
             <img class="object-cover h-full" :src="`http://${_img}`" alt="Album"/>
         </figure>
-        <div class="card-body">
+        <div class="card-body w-[100%]">
             <h2 class="card-title">{{ title }}</h2>
-            <p>{{ resume }}</p>
+            <p class="block textarea-info overflow-y-auto text-ellipsis h-24 leading-6">{{ resume }}</p>
             <div class="card-actions justify-end">
-            <button class="btn btn-primary">{{ _button }}</button>
+                <button @click="emit('learn-more', id);" class="btn btn-primary">{{ _button }}</button>
             </div>
         </div>
     </div>
