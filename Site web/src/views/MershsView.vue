@@ -11,8 +11,7 @@
     import Card from '../components/Card.vue';
 
     let accessoires = ref([]);
-    let photos = ref([]);
-    let photoview = ref ([]);
+    let photos = ref({});
     let search = ref("");
 
     request().access();
@@ -25,7 +24,7 @@
 
                 const promisePH = controller().PhotosController.GetByIdAccessoire(v.idAccessoire)
                 .then((response) => {
-                    photos.value.push(response.data.url[0])
+                    photos.value[v.idAccessoire] = response.data.url[0]
                 })
                 .catch((error) => {
                     request().error(error);
@@ -69,13 +68,11 @@
 
 
 <template>
-    <input type="checkbox" @click="Test(photos)">
+
     <main>
-
         <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-2 m-6 gap-4">
-            <Card :_img="photos[idAccessoire - 1]" @learn-more="router.push(`mersh${$event}`);" :id="accessoire.idAccessoire" :title="accessoire.nomAccessoire" :resume="accessoire.description" v-for="accessoire in Filtre()"/>
+            <Card :_img="photos[accessoire.idAccessoire]" @learn-more="router.push(`mersh${$event}`);" :id="accessoire.idAccessoire" :title="accessoire.nomAccessoire" :resume="accessoire.description" v-for="accessoire in Filtre()"/>
         </div>
-
     </main>
 
     <div class="form-control">

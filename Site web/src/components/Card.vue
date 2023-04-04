@@ -35,7 +35,7 @@
 <template>
     <div class="card lg:card-side bg-base-100 shadow-xl">
         <span v-if="_badge" class=" absolute right-0 m-3 p-4 badge badge-lg">{{_badge}}</span>
-        <figure>
+        <figure class="w-[50%]">
             <img class="object-cover h-full" :src="`http://${_img}`" alt="Album"/>
         </figure>
         <div class="card-body w-[100%]">
