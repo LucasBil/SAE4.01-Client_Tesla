@@ -40,6 +40,9 @@ const request = defineStore( 'request', {
             this.requestCode = '';
             this.typeRequest = '';
         },
+        pass() {
+            this.requestState = true;
+        },
         error(error) { // Requete terminée avec erreur
             this.requestState = true;
             this.requestError = true;
