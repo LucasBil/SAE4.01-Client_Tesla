@@ -1,11 +1,11 @@
 import AccessoiresController from "./AccessoireController";
-import OptionsController from "./OptionsController";
-import MotorisationsController from "./MotorisationsController";
-import ModelesController from "./ModelesController";
-import CaracteristiquesController from "./CaracteristiquesController";
-import PhotosController from "./PhotosController";
+import OptionsController from "./optionsController";
+import MotorisationsController from "./motorisationsController";
+import ModelesController from "./modelesController";
+import CaracteristiquesController from "./caracteristiquesController";
+import PhotosController from "./photosController";
 import TypeOptionsController from "./typeOptionsController";
-import ComptesController from "./ComptesController";
+import ComptesController from "./comptesController";
 import VehiculeDemonstrationsController from "./VehiculeDemonstrationsController";
 import VariantesController from "./VariantesController";
 

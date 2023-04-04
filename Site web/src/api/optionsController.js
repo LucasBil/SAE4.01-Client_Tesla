@@ -1,7 +1,7 @@
 import axios from "axios";
 import ControllerManager from "./ControllerManager";
 
-class MotorisationsController extends ControllerManager {
+class OptionsController extends ControllerManager {
     constructor() {
         super();
         this.name = "options";
@@ -16,4 +16,4 @@ class MotorisationsController extends ControllerManager {
     }
 }
 
-export default new MotorisationsController();
+export default new OptionsController();
