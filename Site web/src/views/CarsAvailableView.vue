@@ -5,17 +5,24 @@
     import IconFilter from '../components/icons/IconFilter.vue';
     import Card from '../components/Card.vue';
 
-    let models = ref([]);
+ 
     let maxPrice = ref(0);
+    let selected_optExt = ref([]);
+    let selected_optInt = ref([]);
+
     let priceLimits = ref([1000000, 0]);
 
-    let motorisations = ref([]);
-    let motorisationview = [];
+    let vehiculesDemo = ref([]);
+    let vehiDemoView = [];
 
+    let models = ref([]);
+    let typeOptions = ref([]);
     let options = ref([]);
 
     let filters = {};
-    let aFilter = {};
+    let avfilters = ref([]);
+    let dictionary = {};
+
     
     request().access();
     onMounted(async () => {
@@ -23,26 +30,52 @@
         controller().ModelesController.GetAll()
         .then((response) => {
             models.value = response.data
+            Promise.all(models.value.map((mod) =>{
+                dictionary[mod.nomModele] = mod.idModele;
+            }))  
+            avfilters.value.push(dictionary);
+            dictionary = {};  
         })
         .catch((error) => {
+            console.log(error);
             request().error(error);
             request().debug();
         })
 
         controller().TypeOptionsController.GetAll()
         .then((response) => {
+            typeOptions.value = response.data
+        })
+        .catch((error) => {
+            request().error(error);
+            request().debug();
+        })
+
+
+
+        controller().OptionsController.GetAll()
+        .then((response) => {
             options.value = response.data;
+            Promise.all(options.value.map((opt) =>{
+                if ( (opt.idType == 1 || opt.idType == 2) && opt.coutAdditionnel != 1190)
+                {
+                    dictionary[opt.libelleOption] = opt.idOption;
+                }
+            }))  
+            avfilters.value.push(dictionary);
+            dictionary = {};  
             request().success(response);
         })
         .catch((error) => {
             request().error(error);
+            console.log(error);
         });
 
         controller().VehiculeDemonstrationsController.GetAll()
         .then((response) => {
-            motorisations.value = response.data;
+            vehiculesDemo.value = response.data;
 
-            Promise.all(motorisations.value.map((moto) =>{
+            Promise.all(vehiculesDemo.value.map((moto) =>{
                 Juste_Price(moto);
                 Initfiltre(moto);
             }))  
@@ -58,8 +91,8 @@
 
     function Juste_Price(moto) {
         if (moto.motosVehiculeNavigation.prix < priceLimits.value[0]){
-                    priceLimits.value[0] = moto.motosVehiculeNavigation.prix;
-                }
+            priceLimits.value[0] = moto.motosVehiculeNavigation.prix;
+        }
         if (moto.motosVehiculeNavigation.prix > priceLimits.value[1]){
             priceLimits.value[1] = moto.motosVehiculeNavigation.prix;
         }
@@ -68,54 +101,78 @@
     function Initfiltre(moto) {
         filters[moto.idVehiculeDemo] =
                 [moto.motosVehiculeNavigation.idModele,
-                moto.optionsVehiculeNavigation[0].idType,
-                moto.optionsVehiculeNavigation[moto.optionsVehiculeNavigation.length-1].idType,
+                moto.optionsVehiculeNavigation[0].idOption,
+                moto.optionsVehiculeNavigation[moto.optionsVehiculeNavigation.length-1].idOption,
                 moto.motosVehiculeNavigation.prix]
     }
 
-    function ActifFiltre(key, value) {
-        if (aFilter[key] == undefined)
+    function ActifFiltre(type, val) {
+        if (type == "mod")
         {
-            aFilter[key] = value;
+            console.log(avfilters.value[0])
+            if(avfilters.value[0][val.nomModele] != -1)
+            {
+                avfilters.value[0][val.nomModele] = -1
+            }
+            else if (avfilters.value[0][val.nomModele] == -1)
+            {
+                avfilters.value[0][val.nomModele] = type.idModele
+            }
         }
-        else{
-            aFilter.delete(key);
+        if (type == "opt")
+        {
+            if(avfilters.value[1][val.libelleOption] != -1)
+            {
+                avfilters.value[1][val.libelleOption] = -1
+            }
+            else if (avfilters.value[1][val.libelleOption] == -1)
+            {
+                avfilters.value[1][val.libelleOption] = type.idOption
+            }
         }
-        console.log(aFilter);    
+          
+        return avfilters;
     }
 
     function Filtre() 
     {
-        motorisationview = [];
-        motorisations.value.forEach(element => {
-            // if(filters[element.idVehiculeDemo][0]){
+        vehiDemoView = [];
+        vehiculesDemo.value.forEach(element => {
+            // if(filters[element.idVehiculeDemo][0] ==){
             //     if(filters[element.idVehiculeDemo][1]){
             //         if(filters[element.idVehiculeDemo][2]){
             //             if (filters[element.idVehiculeDemo][3] <= maxPrice.value){
-            //                 motorisationview.push(element);
+            //                 vehiDemoView.push(element);
             //             }
             //         }
             //     }
+            // }¨
+            // if ( (avfilters.value[0]['MODELE S'] || 
+            //       avfilters.value[0]['MODELE 3'] ||
+            //       avfilters.value[0]['MODELE X'] || 
+            //       avfilters.value[0]['MODELE Y']) == filters[element.idVehiculeDemo][0])
+            // {
+            //     vehiDemoView.push(element);
             // }
             if (filters[element.idVehiculeDemo][3] <= maxPrice.value)
             {
-                motorisationview.push(element);
+                vehiDemoView.push(element);
             }
         });
-        if (motorisationview == []){
-            return motorisations
+        if (vehiDemoView == []){
+            return vehiculesDemo
         }
-        return motorisationview
+        return vehiDemoView
     }
     
-    function Test(msg, msg2)
+    function Test(msg, m2 = null)
     {
-        console.log(msg, msg2);
+        console.log(msg, m2);
     }
 </script>
 
 <template>
-    <input type="checkbox" @click="Test()"/>
+    <input type="checkbox" @click="Test(models)"/>
     <div class="drawer">
         <input id="my-drawer" type="checkbox" class="drawer-toggle" />
         <div class="drawer-content">
@@ -136,34 +193,33 @@
                     <div class="form-control">
                         <label class="label cursor-pointer">
                             <span class="label-text">{{model.nomModele}}</span> 
-                            <input @change="ActifFiltre(model.nomModele, model.idModele)" type="checkbox" class="toggle"/>
+                            <input @change="ActifFiltre('mod',model)" type="checkbox" class="toggle" checked/>
                         </label>
                     </div>
                 </div>
 
-                <div class="divider"></div>
+                <!-- <div class="divider"></div>
                 <h1 class="font-bold mb-3">Couleur Intérieure :</h1>
                 <li>
-                    <select v-if="options.length != 0" class="select select-bordered w-full p-2" name="" id="">
-                        <option value="" selected>Aucune</option>
+                    <select v-model="selected_optInt" class="select select-bordered w-full p-2" name="" id="">
+                        <option value="" selected>Aucune</option> -->
                         <!-- v-for Color In -->
-                        <option v-for="colorIn in options[1].optionsNavigation" :value="colorIn.idOption">{{ colorIn.libelleOption }}</option>
+                        <!-- <option v-for="colorInt in typeOptions[1].optionsNavigation" :value="colorInt.idOption">{{ colorInt.libelleOption }}</option>
                     </select>
                 </li>
                 <div class="divider"></div>
                 <h1 class="font-bold mb-3">Couleur Extérieure :</h1>
-                <button @click="Test(options)">Test</button>
                 <li>
-                    <select v-if="options.length != 0" class="select select-bordered w-full p-2">
-                        <option value="" selected>Aucune</option>
+                    <select v-model="select_optExt" class="select select-bordered w-full p-2">
+                        <option value="" selected>Aucune</option> -->
                         <!-- v-for Color Out -->
-                        <option v-for="colorOut in options[0].optionsNavigation" :value="colorOut.idOption">{{ colorOut.libelleOption }}</option>
+                        <!-- <option v-for="colorExt in typeOptions[0].optionsNavigation" :value="colorExt.idOption">{{ colorExt.libelleOption }}</option>
                     </select>
-                </li>
+                </li> -->
 
                 <div class="divider"></div>
                 <h1 class="font-bold mb-3">Prix max :</h1>
-                <input type="number" :min="priceLimits[0]" :max="priceLimits[1]" v-model="maxPrice" placeholder="75000" class="input input-bordered w-full mb-2" />
+                <input type="number" :min="priceLimits[0]" :max="priceLimits[1]" v-model="maxPrice" placeholder="75000" readonly class="input input-bordered w-full mb-2" />
                 <input type="range" :min="priceLimits[0]" :max="priceLimits[1]" v-model="maxPrice" class="range" />
             </ul>
         </div>
