@@ -21,7 +21,7 @@
         _img: {
             type: String,
             required: true,
-            default: 'img1.ak.crunchyroll.com/i/spire1/d5ad9e0a13330935dd0905b2904b00041588258124_full.jpg'
+            default: 'https://cdn-s-www.lejsl.com/images/75470FF1-1B19-498F-A027-CB1B16054B35/NW_detail_M/le-logo-tesla-evoque-une-coupe-de-moteu-electrique-1651236118.jpg'
         },
         _badge:{
             type: String

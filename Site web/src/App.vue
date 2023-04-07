@@ -89,7 +89,7 @@ let view_panier = ref(false);
       <!-- Panier -->
       <div v-else class="min-h-screen w-full flex flex-col gap-2 items-center">
         <div v-for="item in store_panier().panier">
-          <!-- Voiture -->
+          <!-- Voiture Configurable -->
           <div class="w-full flex flex-col gap-1" v-if="item.article.motorisation">
             <!-- Nom Motorisation -->
             <div class="flex items-center justify-center w-full">
