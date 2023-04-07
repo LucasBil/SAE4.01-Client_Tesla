@@ -137,15 +137,15 @@
             <div class="flex flex-col gap-1">
                 <h1>Adresse :</h1>
                 <div class="flex flex-col md:grid md:grid-cols-4 gap-3">
-                    <InputForm @emit-value="_compte.numeroRue = $event" :_input="{ type:'number',placeholder:`${ _compte.numeroRue }`, min:0}"/>
-                    <InputForm @emit-value="_compte.nomRue = $event" :_input="{ type:'text',placeholder:`${ _compte.nomRue }`}"/>
-                    <InputForm @emit-value="_compte.ville = $event" :_input="{ type:'text',placeholder:`${ _compte.ville }`}"/>
-                    <InputForm @emit-value="_compte.codepostal = $event" :_input="{type:'text',placeholder:`${ _compte.codepostal }`}" />
+                    <InputForm @emit-value="_compte.numeroRue = $event" :_input="{ type:'number',placeholder:`${ (_compte.numeroRue)?_compte.numeroRue:'' }`, min:0}"/>
+                    <InputForm @emit-value="_compte.nomRue = $event" :_input="{ type:'text',placeholder:`${ (_compte.nomRue)?_compte.nomRue:'' }`}"/>
+                    <InputForm @emit-value="_compte.ville = $event" :_input="{ type:'text',placeholder:`${ (_compte.ville)?_compte.ville:'' }`}"/>
+                    <InputForm @emit-value="_compte.codepostal = $event" :_input="{type:'text',placeholder:`${ (_compte.codepostal)?_compte.codepostal:'' }`}" />
                 </div>
             </div>
             <div class="flex flex-col gap-1">
                 <h1>Numéro de Téléphone :</h1>
-                <InputForm @emit-value="_compte.numeroTelephone = $event" :_input="{type:'tel',placeholder:`${ _compte.numeroTelephone }`}" />
+                <InputForm @emit-value="_compte.numeroTelephone = $event" :_input="{type:'tel',placeholder:`${ (_compte.numeroTelephone)?_compte.numeroTelephone:'' }`}" />
             </div>
             <div class="divider mx-[40%]"></div>
             <!-- Compte Pro -->
