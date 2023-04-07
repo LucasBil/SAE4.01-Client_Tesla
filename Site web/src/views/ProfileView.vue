@@ -72,7 +72,7 @@
         }
         });
 
-        if(_compte.value.typeCompte == "proffessionnel") {
+        if(_compte.value.typeCompte == "Professionnel") {
             if(!_compte.value.nomEntreprise || !_compte.value.numTVA || _compte.value.nomEntreprise == "" || _compte.value.numTVA == "")
                 error = true;
         }
@@ -149,7 +149,7 @@
             </div>
             <div class="divider mx-[40%]"></div>
             <!-- Compte Pro -->
-            <div v-if="_compte.typeCompte == 'proffessionnel'" class="flex flex-col gap-3">
+            <div v-if="_compte.typeCompte == 'Professionnel'" class="flex flex-col gap-3">
                 <div class="flex flex-col gap-1">
                     <h1>Nom Entreprise :</h1>
                     <InputForm @emit-value="_compte.nomEntreprise = $event" :_input="{type:'text',placeholder:`${ _compte.nomEntreprise }`}" />

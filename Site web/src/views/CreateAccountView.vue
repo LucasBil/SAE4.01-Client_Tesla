@@ -58,7 +58,7 @@
       }
     });
 
-    if(_compte.value.typeCompte == "proffessionnel") {
+    if(_compte.value.typeCompte == "Professionnel") {
       if(!_compte.value.nomEntreprise || !_compte.value.numTVA || _compte.value.nomEntreprise == "" || _compte.value.numTVA == "")
         error = true;
     }
@@ -86,8 +86,8 @@
             <h1>Type de Compte : <span class="text-error">*</span></h1>
             <select @change="_compte.typeCompte = $event.target.value" :class="(_compte.typeCompte)?'select-success':'select-error animate-pulse'" id="s_typCompt" class="select select-bordered w-full" required>
               <option selected disabled>Type de Compte</option>
-              <option value="personnel">Personnel</option>
-              <option value="proffessionnel">Proffessionel</option>
+              <option value="Personnel">Personnel</option>
+              <option value="Professionnel">Professionel</option>
             </select>
           </div>
           <div class="grid grid-cols-2 gap-3">
@@ -147,13 +147,13 @@
   
       <!-- Compte Pro -->
   
-      <div v-if="(_compte.typeCompte == 'proffessionnel')" class="divider mx-6 md:col-span-3 pro"></div> 
+      <div v-if="(_compte.typeCompte == 'Professionnel')" class="divider mx-6 md:col-span-3 pro"></div> 
   
-      <div v-if="(_compte.typeCompte == 'proffessionnel')" class="px-6 md:p-6 pro">
-        <h1 class="text-2xl font-bold">Compte Proffessionnel</h1>
-        <p class="text-gray-500 py-3">Ces informations ne sont pas nécéssaire pour la création d'un compte. De plus seul les comptes proffessionnel peuvent remplir ces données</p>
+      <div v-if="(_compte.typeCompte == 'Professionnel')" class="px-6 md:p-6 pro">
+        <h1 class="text-2xl font-bold">Compte Professionnel</h1>
+        <p class="text-gray-500 py-3">Ces informations ne sont pas nécéssaire pour la création d'un compte. De plus seul les comptes professionnel peuvent remplir ces données</p>
       </div>
-      <div v-if="(_compte.typeCompte == 'proffessionnel')" class="col-span-2 m-3 p-6 rounded-xl shadow-xl  pro">
+      <div v-if="(_compte.typeCompte == 'Professionnel')" class="col-span-2 m-3 p-6 rounded-xl shadow-xl  pro">
         <div class="flex flex-col gap-3">
           <div class="flex flex-col gap-1">
             <h1>Nom Entreprise : <span class="text-error">*</span></h1>
