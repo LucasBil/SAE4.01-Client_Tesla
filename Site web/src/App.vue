@@ -97,7 +97,7 @@ let view_panier = ref(false);
             </div>
             <!-- Options -->
             <div class="flex flex-col" v-for="option in item.article.options">
-              <span>{{ option.libelleOption }}</span>
+              <span v-if="option">{{ option.libelleOption }}</span>
             </div>
           </div>
 
